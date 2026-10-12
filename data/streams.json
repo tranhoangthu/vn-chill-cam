@@ -1,11 +1,11 @@
 {
   "cameras": [],
   "donate": {
-    "accountName": "",
-    "accountNumber": "",
-    "bankName": "",
+    "accountName": "TRAN HOANG THU",
+    "accountNumber": "8811784740",
+    "bankName": "BIDV",
     "note": "Mỗi sự ủng hộ của bạn giúp mình duy trì web và tìm thêm nhiều camera, kênh radio hay hơn nữa.",
-    "qrImage": "assets/donate-qr.svg"
+    "qrImage": "assets/donate-qr.png"
   },
   "radios": [
     {
