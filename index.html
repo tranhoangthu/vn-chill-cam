@@ -338,6 +338,7 @@ async function reload(){
     renderAll();
   }catch(e){
     document.getElementById("connErr").style.display = "";
+    renderAll();
   }
 }
 function watchLive(){
