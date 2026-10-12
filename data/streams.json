@@ -1,5 +1,15 @@
 {
-  "cameras": [],
+  "cameras": [
+    {
+      "id": "cam-mv51hecx522",
+      "name": "Vòng Xoay Điện Biên Phủ (TP.HCM)",
+      "location": "Giao điểm của đường Điện Biên Phủ và đường Nguyễn Bỉnh Khiêm, gần cầu Điện Biên Phủ và các tuyến đường Hoàng Sa, Đinh Tiên Hoàng",
+      "type": "hls",
+      "url": "https://livevn.piepme.com/camhls/14789.a6a2cdaedb0e4a62b8307d232370f4ff_720p/index.m3u8",
+      "refresh": "15",
+      "note": ""
+    }
+  ],
   "donate": {
     "accountName": "TRAN HOANG THU",
     "accountNumber": "8811784740",
