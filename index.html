@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ngắm Việt Nam qua camera trực tiếp, nghe radio và âm thanh thiên nhiên để thư giãn.">
+<title>VN Chill Cam</title>
+<style>
+:root{
+  --bg:#0e1319; --surface:#161e28; --surface2:#1c2634; --border:#2a3646;
+  --text:#e9eff6; --muted:#9aa8bb; --accent:#f2b23e; --teal:#57c7b8; --danger:#e26d6d;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6}
+body.has-player{padding-bottom:78px}
+a{color:var(--teal)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:50;background:rgba(14,19,25,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.top-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;font-size:20px;letter-spacing:.5px;color:var(--text);text-decoration:none}
+.brand span{color:var(--accent)}
+nav a{margin-left:16px;color:var(--muted);text-decoration:none;font-size:15px}
+nav a:hover{color:var(--text)}
+nav a.admin-link{border:1px solid var(--border);border-radius:999px;padding:5px 14px;font-size:13px}
+.hero{padding:54px 0 30px;text-align:center}
+.hero h1{font-size:clamp(30px,5vw,48px);margin:0 0 10px;letter-spacing:.5px}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);margin:0 auto;max-width:660px;font-size:17px}
+.announce{margin:22px auto 0;max-width:720px;background:#2a2410;border:1px solid #6b5518;color:#f5d97e;padding:10px 18px;border-radius:10px;font-size:15px}
+section.block{padding:26px 0}
+.block h2{font-size:24px;margin:0 0 4px}
+.block .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
+.cam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.cam-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.player{position:relative;aspect-ratio:16/9;background:#000}
+.player iframe,.player video,.player img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+.player .p-err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;padding:16px;text-align:center}
+.cam-meta{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cam-meta h3{margin:0;font-size:16px;font-weight:600}
+.loc{font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:3px 10px;border-radius:20px;white-space:nowrap}
+.img-note{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.65);color:#cfd8e3;font-size:11px;padding:3px 9px;border-radius:999px}
+.empty{border:1.5px dashed var(--border);border-radius:14px;padding:38px 20px;text-align:center;color:var(--muted);font-size:15px}
+.station-list{display:flex;flex-wrap:wrap;gap:10px}
+.station{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:10px 18px;cursor:pointer;font-size:15px;color:var(--text);display:flex;align-items:center;gap:9px;font-family:inherit}
+.station:hover{border-color:var(--teal)}
+.station.playing{border-color:var(--teal);background:#12332f}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.station.playing .dot{background:var(--teal)}
+.amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.amb-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px}
+.amb-card h3{margin:0 0 4px;font-size:16px}
+.amb-card p{margin:0 0 12px;color:var(--muted);font-size:13px}
+.amb-row{display:flex;align-items:center;gap:10px}
+.toggle{min-width:66px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px;font-family:inherit}
+.toggle.on{background:var(--teal);border-color:var(--teal);color:#062a26;font-weight:700}
+input[type=range]{flex:1;accent-color:var(--teal)}
+.donate-box{display:grid;grid-template-columns:280px 1fr;gap:26px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;align-items:start}
+@media(max-width:700px){.donate-box{grid-template-columns:1fr}}
+.donate-box img{width:100%;max-width:280px;border-radius:12px;background:#fff;display:block}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:15px}
+.kv span{color:var(--muted)}
+.copybtn{margin-top:16px;padding:10px 20px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-size:15px;font-family:inherit}
+.copybtn:hover{background:rgba(242,178,62,.12)}
+#playerbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(16,24,32,.96);border-top:1px solid var(--border);backdrop-filter:blur(8px);display:none}
+#playerbar.show{display:block}
+.pb-inner{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px}
+.pb-btn{width:46px;height:46px;border-radius:50%;border:0;background:var(--teal);color:#062a26;font-size:18px;cursor:pointer;flex:none;line-height:1}
+.pb-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.pb-title small{color:var(--muted);display:block;font-size:12px}
+.pb-vol{display:flex;align-items:center;gap:8px;flex:none}
+.pb-vol input{width:110px}
+.pb-close{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;flex:none}
+footer{border-top:1px solid var(--border);margin-top:34px;padding:22px 0 40px;color:var(--muted);font-size:14px;text-align:center}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="#">VN <span>Chill</span> Cam</a>
+    <nav>
+      <a href="#camera">Camera</a>
+      <a href="#radio">Radio</a>
+      <a href="#ambient">Âm thanh</a>
+      <a href="#donate">Ủng hộ</a>
+      <a class="admin-link" href="admin.html">Quản trị</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>VN <span>Chill</span> Cam</h1>
+    <p id="tagline">Đang tải...</p>
+    <div id="announce" class="announce" style="display:none"></div>
+  </section>
+
+  <section class="block" id="camera">
+    <h2>Camera trực tiếp</h2>
+    <p class="sub">Những góc nhìn khắp Việt Nam, cập nhật liên tục.</p>
+    <div id="camGrid" class="cam-grid"></div>
+  </section>
+
+  <section class="block" id="radio">
+    <h2>Radio</h2>
+    <p class="sub">Bấm vào kênh để nghe. Trình phát nằm ở thanh dưới cùng.</p>
+    <div id="stationList" class="station-list"></div>
+  </section>
+
+  <section class="block" id="ambient">
+    <h2>Âm thanh thư giãn</h2>
+    <p class="sub">Âm thanh tạo trực tiếp trên trình duyệt của bạn, không cần mạng. Bật nhiều lớp cùng lúc và chỉnh âm lượng riêng.</p>
+    <div class="amb-grid" id="ambGrid"></div>
+  </section>
+
+  <section class="block" id="donate">
+    <h2>Ủng hộ mình</h2>
+    <p class="sub">Hoàn toàn tự nguyện. Mình cảm ơn nhiều lắm.</p>
+    <div class="donate-box">
+      <img id="donateQr" alt="Mã QR ủng hộ">
+      <div>
+        <div id="donateInfo"></div>
+        <p id="donateNote" style="color:var(--muted);font-size:15px"></p>
+        <button class="copybtn" id="copyAcc" style="display:none">Sao chép số tài khoản</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="playerbar">
+  <div class="pb-inner">
+    <button class="pb-btn" id="pbToggle" title="Phát / Tạm dừng">❚❚</button>
+    <div class="pb-title"><span id="pbName">—</span><small id="pbStatus">Đang tải...</small></div>
+    <div class="pb-vol"><input type="range" id="pbVol" min="0" max="100" value="80"></div>
+    <button class="pb-close" id="pbClose">Đóng</button>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">VN Chill Cam — ngắm, nghe và thư giãn. Nội dung camera và radio thuộc về các đơn vị phát sóng.</div>
+</footer>
+
+<noscript><p style="text-align:center">Trang này cần bật JavaScript để hoạt động.</p></noscript>
+<script>
+"use strict";
+/* ---------- Tiện ích ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function escAttr(s){return esc(s).replace(/`/g,"&#96;");}
+
+async function loadData(){
+  const res = await fetch("data/streams.json?v="+Date.now(),{cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  return res.json();
+}
+
+/* ---------- HLS (dùng chung cho camera và radio) ---------- */
+let hlsJsPromise = null;
+function loadHlsJs(){
+  if(window.Hls) return Promise.resolve();
+  if(!hlsJsPromise){
+    hlsJsPromise = new Promise(function(resolve,reject){
+      const s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js";
+      s.onload=resolve; s.onerror=reject;
+      document.head.appendChild(s);
+    });
+  }
+  return hlsJsPromise;
+}
+async function attachHls(media,url){
+  try{
+    await loadHlsJs();
+    if(window.Hls && window.Hls.isSupported()){
+      const hls=new window.Hls({maxBufferLength:30});
+      hls.loadSource(url);
+      hls.attachMedia(media);
+      return true;
+    }
+  }catch(e){/* bỏ qua, thử phát trực tiếp */}
+  try{ media.src=url; return true; }catch(e2){ return false; }
+}
+
+/* ---------- Camera ---------- */
+const imgTimers=[];
+function playerError(player,msg){
+  player.innerHTML='<div class="p-err">'+esc(msg||"Không tải được luồng này. Có thể link đã hỏng, mình sẽ kiểm tra lại sớm.")+"</div>";
+}
+function buildCamera(cam){
+  const card=document.createElement("article");
+  card.className="cam-card";
+  const player=document.createElement("div");
+  player.className="player";
+  const type=(cam.type||"iframe").toLowerCase();
+
+  if(type==="iframe"){
+    const f=document.createElement("iframe");
+    f.src=cam.url; f.title=cam.name||"Camera";
+    f.loading="lazy";
+    f.setAttribute("allow","accelerometer; autoplay; encrypted-media; picture-in-picture");
+    f.setAttribute("allowfullscreen","");
+    player.appendChild(f);
+  }else if(type==="image"){
+    const img=document.createElement("img");
+    img.alt=cam.name||"Camera"; img.loading="lazy";
+    const refresh=Math.max(5,parseInt(cam.refresh||"15",10)||15);
+    const tick=function(){ img.src=cam.url+(cam.url.indexOf("?")>=0?"&":"?")+"t="+Date.now(); };
+    img.onerror=function(){ playerError(player,"Không tải được ảnh camera. Có thể link đã hỏng."); };
+    tick();
+    imgTimers.push(setInterval(tick,refresh*1000));
+    player.appendChild(img);
+    const note=document.createElement("span");
+    note.className="img-note";
+    note.textContent="Ảnh tĩnh, tự làm mới mỗi "+refresh+" giây";
+    player.appendChild(note);
+  }else{ /* hls hoặc mp4 */
+    const v=document.createElement("video");
+    v.controls=true; v.playsInline=true; v.preload="metadata";
+    v.addEventListener("error",function(){ playerError(player); });
+    player.appendChild(v);
+    if(type==="hls" && !v.canPlayType("application/vnd.apple.mpegurl")){
+      attachHls(v,cam.url);
+    }else{
+      v.src=cam.url;
+    }
+  }
+
+  card.appendChild(player);
+  const meta=document.createElement("div");
+  meta.className="cam-meta";
+  meta.innerHTML="<h3>"+esc(cam.name||"Camera")+"</h3>"+
+    (cam.location?'<span class="loc">'+esc(cam.location)+"</span>":"");
+  card.appendChild(meta);
+  return card;
+}
+function renderCameras(list){
+  const grid=document.getElementById("camGrid");
+  grid.innerHTML="";
+  if(!list||!list.length){
+    grid.innerHTML='<div class="empty">Chưa có camera nào ở đây.<br>Mình đang sưu tầm thêm, bạn quay lại sau nhé.</div>';
+    return;
+  }
+  list.forEach(function(cam){ grid.appendChild(buildCamera(cam)); });
+}
+/* ---------- Radio ---------- */
+const audio=new Audio();
+audio.preload="none";
+let currentStationId=null;
+
+async function resolveAudioUrl(raw){
+  const u=String(raw||"").trim();
+  if(/\.m3u8(\?|#|$)/i.test(u)) return {url:u,hls:true};
+  if(/\.(m3u|pls)(\?|#|$)/i.test(u)){
+    try{
+      const r=await fetch(u);
+      if(!r.ok) throw new Error("fetch failed");
+      const txt=await r.text();
+      const line=txt.split(/\r?\n/).map(function(s){return s.trim();})
+        .find(function(s){return s && s.charAt(0)!=="#";});
+      if(line){
+        const abs=new URL(line,u).href;
+        return {url:abs,hls:/\.m3u8(\?|#|$)/i.test(abs)};
+      }
+    }catch(e){/* trình duyệt chặn đọc file m3u, thử phát trực tiếp */}
+  }
+  return {url:u,hls:false};
+}
+function setPbStatus(t){document.getElementById("pbStatus").textContent=t;}
+async function playStation(st,btn){
+  document.querySelectorAll(".station").forEach(function(b){b.classList.remove("playing");});
+  if(btn) btn.classList.add("playing");
+  currentStationId=st.id;
+  const bar=document.getElementById("playerbar");
+  bar.classList.add("show");
+  document.body.classList.add("has-player");
+  document.getElementById("pbName").textContent=st.name;
+  setPbStatus("Đang tải...");
+  document.getElementById("pbToggle").textContent="❚❚";
+  try{ audio.pause(); }catch(e){}
+  try{
+    const r=await resolveAudioUrl(st.url);
+    if(currentStationId!==st.id) return; /* người dùng đã bấm kênh khác */
+    if(r.hls){
+      if(audio.canPlayType("application/vnd.apple.mpegurl")){
+        audio.src=r.url;
+      }else{
+        const ok=await attachHls(audio,r.url);
+        if(!ok) throw new Error("hls");
+      }
+    }else{
+      audio.src=r.url;
+    }
+    await audio.play();
+    setPbStatus("Đang phát");
+  }catch(e){
+    setPbStatus("Không phát được. Có thể link đã hỏng.");
+  }
+}
+function renderRadios(list){
+  const box=document.getElementById("stationList");
+  box.innerHTML="";
+  if(!list||!list.length){
+    box.innerHTML='<div class="empty" style="width:100%">Chưa có kênh radio nào.<br>Mình đang sưu tầm thêm, bạn quay lại sau nhé.</div>';
+    return;
+  }
+  list.forEach(function(st){
+    const b=document.createElement("button");
+    b.className="station";
+    b.innerHTML='<span class="dot"></span><span>'+esc(st.name||"Kênh radio")+"</span>";
+    b.title=st.note||st.name||"";
+    b.addEventListener("click",function(){ playStation(st,b); });
+    box.appendChild(b);
+  });
+}
+document.getElementById("pbToggle").addEventListener("click",function(){
+  if(audio.paused){ audio.play().catch(function(){}); this.textContent="❚❚"; setPbStatus("Đang phát"); }
+  else{ audio.pause(); this.textContent="▶"; setPbStatus("Tạm dừng"); }
+});
+document.getElementById("pbVol").addEventListener("input",function(){ audio.volume=this.value/100; });
+audio.volume=0.8;
+document.getElementById("pbClose").addEventListener("click",function(){
+  try{ audio.pause(); }catch(e){}
+  currentStationId=null;
+  document.getElementById("playerbar").classList.remove("show");
+  document.body.classList.remove("has-player");
+  document.querySelectorAll(".station").forEach(function(b){b.classList.remove("playing");});
+});
+
+/* ---------- Âm thanh thư giãn (tổng hợp bằng Web Audio) ---------- */
+const Ambient=(function(){
+  let ctx=null,master=null,whiteBuf=null,brownBuf=null;
+  const active={};
+  const volumes={rain:.5,waves:.55,wind:.4,brown:.5};
+  function ensure(){
+    if(ctx) return;
+    const AC=window.AudioContext||window.webkitAudioContext;
+    ctx=new AC();
+    master=ctx.createGain(); master.gain.value=.9; master.connect(ctx.destination);
+  }
+  function noiseBuf(){
+    const len=ctx.sampleRate*2,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+    return buf;
+  }
+  function brownNoiseBuf(){
+    const len=ctx.sampleRate*2,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
+    let last=0;
+    for(let i=0;i<len;i++){const w=Math.random()*2-1;d[i]=(last+.02*w)/1.02;last=d[i];d[i]*=3.5;}
+    return buf;
+  }
+  function src(buf){const s=ctx.createBufferSource();s.buffer=buf;s.loop=true;return s;}
+  function lfo(freq,depth){
+    const o=ctx.createOscillator();o.frequency.value=freq;
+    const g=ctx.createGain();g.gain.value=depth;
+    o.connect(g);o.start();return {out:g,nodes:[o]};
+  }
+  const defs={
+    rain:function(){
+      whiteBuf=whiteBuf||noiseBuf();
+      const s=src(whiteBuf),lp=ctx.createBiquadFilter(),hp=ctx.createBiquadFilter(),g=ctx.createGain();
+      lp.type="lowpass";lp.frequency.value=1700;hp.type="highpass";hp.frequency.value=350;
+      g.gain.value=0;
+      const w=lfo(.13,.07);w.out.connect(g.gain);
+      s.connect(lp);lp.connect(hp);hp.connect(g);s.start();
+      return {nodes:[s].concat(w.nodes),out:g};
+    },
+    waves:function(){
+      whiteBuf=whiteBuf||noiseBuf();
+      const s=src(whiteBuf),lp=ctx.createBiquadFilter(),g=ctx.createGain();
+      lp.type="lowpass";lp.frequency.value=520;g.gain.value=0;
+      const w=lfo(.08,.22);w.out.connect(g.gain);
+      s.connect(lp);lp.connect(g);s.start();
+      return {nodes:[s].concat(w.nodes),out:g};
+    },
+    wind:function(){
+      whiteBuf=whiteBuf||noiseBuf();
+      const s=src(whiteBuf),bp=ctx.createBiquadFilter(),g=ctx.createGain();
+      bp.type="bandpass";bp.frequency.value=480;bp.Q.value=.6;g.gain.value=0;
+      const w1=lfo(.05,.1),w2=lfo(.11,.06);
+      w1.out.connect(g.gain);w2.out.connect(g.gain);
+      s.connect(bp);bp.connect(g);s.start();
+      return {nodes:[s].concat(w1.nodes,w2.nodes),out:g};
+    },
+    brown:function(){
+      brownBuf=brownBuf||brownNoiseBuf();
+      const s=src(brownBuf),g=ctx.createGain();g.gain.value=0;
+      s.connect(g);s.start();
+      return {nodes:[s],out:g};
+    }
+  };
+  return {
+    isOn:function(n){return !!active[n];},
+    toggle:function(n){
+      ensure();
+      if(ctx.state==="suspended") ctx.resume();
+      if(active[n]){
+        const a=active[n];delete active[n];
+        a.out.gain.setTargetAtTime(0,ctx.currentTime,.35);
+        setTimeout(function(){a.nodes.forEach(function(x){try{x.stop();}catch(e){} try{x.disconnect();}catch(e2){}});},700);
+        return false;
+      }
+      const b=defs[n]();
+      b.out.connect(master);
+      active[n]=b;
+      b.out.gain.setTargetAtTime(volumes[n]||.5,ctx.currentTime,.9);
+      return true;
+    },
+    setVolume:function(n,v){
+      volumes[n]=v;
+      if(active[n]) active[n].out.gain.setTargetAtTime(v,ctx.currentTime,.15);
+    }
+  };
+})();
+const AMBIENT_SOUNDS=[
+  {id:"rain", name:"Tiếng mưa", desc:"Mưa rơi đều, dễ ngủ"},
+  {id:"waves",name:"Sóng biển",desc:"Sóng vỗ nhịp nhàng"},
+  {id:"wind", name:"Tiếng gió", desc:"Gió thổi nhẹ qua kẽ lá"},
+  {id:"brown",name:"Ồn nâu",   desc:"Tiếng ù trầm giúp tập trung"}
+];
+function renderAmbient(){
+  const grid=document.getElementById("ambGrid");
+  AMBIENT_SOUNDS.forEach(function(s){
+    const card=document.createElement("div");
+    card.className="amb-card";
+    card.innerHTML="<h3>"+esc(s.name)+"</h3><p>"+esc(s.desc)+"</p>"+
+      '<div class="amb-row"><button class="toggle">Bật</button>'+
+      '<input type="range" min="0" max="100" value="50" aria-label="Âm lượng"></div>';
+    const btn=card.querySelector(".toggle"),rg=card.querySelector("input");
+    btn.addEventListener("click",function(){
+      const on=Ambient.toggle(s.id);
+      btn.textContent=on?"Tắt":"Bật";
+      btn.classList.toggle("on",on);
+    });
+    rg.addEventListener("input",function(){ Ambient.setVolume(s.id,this.value/100); });
+    grid.appendChild(card);
+  });
+}
+
+/* ---------- Ủng hộ ---------- */
+function renderDonate(d){
+  d=d||{};
+  document.getElementById("donateQr").src=d.qrImage||"assets/donate-qr.svg";
+  const info=document.getElementById("donateInfo");
+  let html="";
+  if(d.bankName) html+='<div class="kv"><span>Ngân hàng</span><b>'+esc(d.bankName)+"</b></div>";
+  if(d.accountName) html+='<div class="kv"><span>Chủ tài khoản</span><b>'+esc(d.accountName)+"</b></div>";
+  if(d.accountNumber) html+='<div class="kv"><span>Số tài khoản</span><b>'+esc(d.accountNumber)+"</b></div>";
+  info.innerHTML=html;
+  document.getElementById("donateNote").textContent=d.note||"";
+  const cp=document.getElementById("copyAcc");
+  if(d.accountNumber){
+    cp.style.display="";
+    cp.addEventListener("click",function(){
+      const done=function(){cp.textContent="Đã sao chép";setTimeout(function(){cp.textContent="Sao chép số tài khoản";},2000);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(d.accountNumber).then(done).catch(function(){fallbackCopy(d.accountNumber);done();});
+      }else{fallbackCopy(d.accountNumber);done();}
+    });
+  }
+}
+function fallbackCopy(t){
+  const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);
+  ta.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(ta);
+}
+
+/* ---------- Khởi động ---------- */
+(function init(){
+  renderAmbient();
+  loadData().then(function(data){
+    document.title=(data.site&&data.site.title)||"VN Chill Cam";
+    document.getElementById("tagline").textContent=(data.site&&data.site.tagline)||"";
+    const ann=data.site&&data.site.announcement;
+    if(ann){const a=document.getElementById("announce");a.textContent=ann;a.style.display="";}
+    renderCameras(data.cameras);
+    renderRadios(data.radios);
+    renderDonate(data.donate);
+  }).catch(function(){
+    document.getElementById("tagline").textContent="Không tải được dữ liệu. Bạn thử tải lại trang nhé.";
+  });
+})();
+</script>
+</body>
+</html>

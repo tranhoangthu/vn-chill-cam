@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Quản trị — VN Chill Cam</title>
+<style>
+:root{
+  --bg:#0e1319; --surface:#161e28; --surface2:#1c2634; --border:#2a3646;
+  --text:#e9eff6; --muted:#9aa8bb; --accent:#f2b23e; --teal:#57c7b8;
+  --danger:#e26d6d; --ok:#6fdc73;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:50;background:rgba(14,19,25,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.top-inner{display:flex;align-items:center;justify-content:space-between;min-height:60px;padding:8px 0;gap:10px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:18px}
+.brand span{color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+button{font-family:inherit;cursor:pointer}
+.btn{padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#062a26;font-weight:700}
+.btn.primary:disabled{opacity:.5;cursor:wait}
+.btn.danger{border-color:#5a2b2b;color:var(--danger);background:transparent}
+.btn.small{padding:6px 12px;font-size:13px;border-radius:8px}
+#pinGate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.pin-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:380px;text-align:center}
+.pin-box h2{margin:0 0 8px}
+.pin-box p{color:var(--muted);font-size:14px;margin:0 0 18px}
+.pin-box input{width:100%;padding:12px;font-size:20px;text-align:center;letter-spacing:8px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);margin-bottom:12px}
+.pin-err{color:var(--danger);font-size:14px;min-height:22px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin:18px 0}
+.card h2{margin:0 0 6px;font-size:19px}
+.card .desc{color:var(--muted);font-size:14px;margin:0 0 14px}
+.card .desc a{color:var(--teal)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+.field input[type=text],.field input[type=password],.field input[type=number],.field select,.field textarea{
+  width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--border);
+  background:var(--surface2);color:var(--text);font-size:15px;font-family:inherit}
+.field textarea{resize:vertical;min-height:64px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+.tab{padding:10px 20px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:15px}
+.tab.active{background:var(--surface2);color:var(--text);border-color:var(--teal)}
+.item{border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;background:var(--surface2)}
+.item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.item-head b{font-size:16px}
+.item-tools{display:flex;gap:8px}
+#statusBar{position:sticky;top:60px;z-index:40;margin:0 -20px;padding:10px 20px;display:none;font-size:14px}
+#statusBar.show{display:block}
+#statusBar.ok{background:#0f2c1a;border-bottom:1px solid #1d5c34;color:#a9e8b5}
+#statusBar.err{background:#2c1414;border-bottom:1px solid #5c1d1d;color:#f0a8a8}
+#statusBar.info{background:#14202c;border-bottom:1px solid var(--border);color:var(--muted)}
+.dirty-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px}
+.token-ok{color:var(--ok);font-size:14px}
+.token-missing{color:var(--accent);font-size:14px}
+.steps{margin:10px 0 0;padding-left:20px;color:var(--muted);font-size:14px}
+.steps li{margin-bottom:6px}
+.steps code{background:#0a0e13;padding:2px 7px;border-radius:6px;font-size:13px;color:var(--text)}
+.qr-preview{max-width:220px;border-radius:10px;background:#fff;display:block;margin-top:8px}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+footer{color:var(--muted);font-size:13px;text-align:center;padding:26px 0 40px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div id="pinGate">
+  <div class="pin-box">
+    <h2>Khu vực quản trị</h2>
+    <p>Nhập mã PIN để tiếp tục. Mặc định là <b>123456</b>, bạn nên đổi trong phần Cài đặt.</p>
+    <input type="password" id="pinInput" maxlength="32" autocomplete="off" placeholder="••••••">
+    <div class="pin-err" id="pinErr"></div>
+    <button class="btn primary" id="pinGo" style="width:100%">Vào trang quản trị</button>
+    <p class="hint">Mã PIN chỉ chống người tò mò bấm nhầm, không phải bảo mật thật.<br>Bảo mật thật nằm ở token GitHub chỉ lưu trên trình duyệt của bạn.</p>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="brand">VN <span>Chill</span> Cam — Quản trị</div>
+    <div class="actions">
+      <span id="dirtyFlag" class="hidden" style="align-self:center;font-size:13px;color:var(--accent)"><span class="dirty-dot"></span>Chưa lưu</span>
+      <button class="btn small" id="btnReload">Tải lại dữ liệu</button>
+      <a class="btn small" href="index.html" style="text-decoration:none;display:inline-block;line-height:1.6">Xem web</a>
+      <button class="btn small primary" id="btnSave">Lưu và triển khai</button>
+    </div>
+  </div>
+  <div id="statusBar"></div>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <h2>Kết nối GitHub</h2>
+    <p class="desc">Trang này lưu thay đổi trực tiếp lên repo <b>tranhoangthu/vn-chill-cam</b> bằng token của bạn. Token chỉ lưu trên trình duyệt này.</p>
+    <div id="tokenStatus" class="token-missing">Chưa có token.</div>
+    <div class="field" style="margin-top:10px">
+      <label>Personal Access Token</label>
+      <input type="password" id="tokenInput" placeholder="Dán token vào đây (bắt đầu bằng github_pat_...)">
+    </div>
+    <div class="actions">
+      <button class="btn small" id="btnTokenSave">Lưu token</button>
+      <button class="btn small" id="btnTokenTest">Kiểm tra kết nối</button>
+      <button class="btn small danger" id="btnTokenClear">Xóa token</button>
+    </div>
+    <ol class="steps">
+      <li>Mở <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">trang tạo token của GitHub</a>.</li>
+      <li>Đặt tên token, ở mục Repository access chọn <code>Only select repositories</code> rồi chọn <code>vn-chill-cam</code>.</li>
+      <li>Ở mục Repository permissions, tìm <code>Contents</code> và chọn <code>Read and write</code>.</li>
+      <li>Bấm <code>Generate token</code>, sao chép và dán vào ô phía trên, rồi bấm Lưu token.</li>
+    </ol>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="cameras">Camera</button>
+    <button class="tab" data-tab="radios">Radio</button>
+    <button class="tab" data-tab="general">Chung và Ủng hộ</button>
+  </div>
+
+  <div id="tab-cameras">
+    <div class="card">
+      <h2>Danh sách camera</h2>
+      <p class="desc">Loại <b>iframe</b>: nhúng trang phát (ví dụ YouTube). <b>hls</b>: link .m3u8. <b>mp4</b>: file video trực tiếp. <b>image</b>: ảnh tĩnh tự làm mới (camera giao thông).</p>
+      <div id="camList"></div>
+      <button class="btn" id="btnAddCam">+ Thêm camera</button>
+    </div>
+  </div>
+
+  <div id="tab-radios" class="hidden">
+    <div class="card">
+      <h2>Danh sách kênh radio</h2>
+      <p class="desc">Dán link stream trực tiếp. Nếu bạn có file .m3u/.pls, web sẽ tự bóc link bên trong khi phát (một số host chặn thì bạn cần dán link stream gốc).</p>
+      <div id="radioList"></div>
+      <button class="btn" id="btnAddRadio">+ Thêm kênh radio</button>
+    </div>
+  </div>
+
+  <div id="tab-general" class="hidden">
+    <div class="card">
+      <h2>Thông tin chung</h2>
+      <div class="field"><label>Tiêu đề web</label><input type="text" id="fTitle"></div>
+      <div class="field"><label>Dòng giới thiệu</label><textarea id="fTagline"></textarea></div>
+      <div class="field"><label>Thông báo (để trống nếu không cần)</label><textarea id="fAnnounce"></textarea></div>
+    </div>
+    <div class="card">
+      <h2>Ủng hộ</h2>
+      <div class="field"><label>Ảnh QR (chọn ảnh mới để thay thế)</label>
+        <input type="file" id="fQrFile" accept="image/*">
+        <img id="qrPreview" class="qr-preview" alt="Xem trước QR">
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Ngân hàng / Ví</label><input type="text" id="fBank"></div>
+        <div class="field"><label>Chủ tài khoản</label><input type="text" id="fAccName"></div>
+      </div>
+      <div class="field"><label>Số tài khoản</label><input type="text" id="fAccNum"></div>
+      <div class="field"><label>Lời nhắn</label><textarea id="fDonateNote"></textarea></div>
+    </div>
+    <div class="card">
+      <h2>Cài đặt</h2>
+      <div class="grid2">
+        <div class="field"><label>Mã PIN mới</label><input type="password" id="fPin1" maxlength="32"></div>
+        <div class="field"><label>Nhập lại mã PIN</label><input type="password" id="fPin2" maxlength="32"></div>
+      </div>
+      <button class="btn small" id="btnPinChange">Đổi mã PIN</button>
+    </div>
+  </div>
+</main>
+
+<footer>Thay đổi được lưu lên GitHub, Vercel tự triển khai lại trong khoảng 1-2 phút.</footer>
+
+<script>
+"use strict";
+/* ---------- Hằng số ---------- */
+const OWNER="tranhoangthu", REPO="vn-chill-cam";
+const LS_TOKEN="vcc_gh_token", LS_PIN="vcc_admin_pin";
+const API="https://api.github.com";
+
+/* ---------- Tiện ích ---------- */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function $(id){return document.getElementById(id);}
+function b64encode(str){return btoa(unescape(encodeURIComponent(str)));}
+async function sha256(str){
+  const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
+}
+function status(msg,kind){
+  const bar=$("statusBar");
+  bar.className="show "+(kind||"info");
+  bar.textContent=msg;
+}
+function clearStatus(){ $("statusBar").className=""; $("statusBar").textContent=""; }
+function markDirty(){ $("dirtyFlag").classList.remove("hidden"); }
+function markClean(){ $("dirtyFlag").classList.add("hidden"); }
+
+/* ---------- Mã PIN ---------- */
+async function checkPin(){
+  const saved=localStorage.getItem(LS_PIN);
+  const input=$("pinInput").value;
+  if(!saved){
+    if(input==="123456"){ enterAdmin(); return; }
+  }else{
+    if(await sha256(input)===saved){ enterAdmin(); return; }
+  }
+  $("pinErr").textContent="Sai mã PIN, thử lại nhé.";
+}
+function enterAdmin(){
+  $("pinGate").style.display="none";
+  initAdmin();
+}
+$("pinGo").addEventListener("click",checkPin);
+$("pinInput").addEventListener("keydown",function(e){ if(e.key==="Enter") checkPin(); });
+
+/* ---------- Token GitHub ---------- */
+function getToken(){ return localStorage.getItem(LS_TOKEN)||""; }
+function refreshTokenStatus(){
+  const t=getToken();
+  $("tokenStatus").className=t?"token-ok":"token-missing";
+  $("tokenStatus").textContent=t?"Đã lưu token trên trình duyệt này.":"Chưa có token. Làm theo 4 bước bên dưới để tạo.";
+}
+$("btnTokenSave").addEventListener("click",function(){
+  const v=$("tokenInput").value.trim();
+  if(!v){ status("Bạn chưa dán token.","err"); return; }
+  localStorage.setItem(LS_TOKEN,v);
+  $("tokenInput").value="";
+  refreshTokenStatus();
+  status("Đã lưu token.","ok");
+});
+$("btnTokenClear").addEventListener("click",function(){
+  localStorage.removeItem(LS_TOKEN);
+  refreshTokenStatus();
+  status("Đã xóa token khỏi trình duyệt này.","info");
+});
+async function gh(path,method,body){
+  const token=getToken();
+  if(!token) throw new Error("no-token");
+  const res=await fetch(API+path,{
+    method:method||"GET",
+    headers:{"Authorization":"Bearer "+token,"Accept":"application/vnd.github+json","Content-Type":"application/json"},
+    body:body?JSON.stringify(body):undefined
+  });
+  if(res.status===404){ const e=new Error("not-found"); e.status=404; throw e; }
+  if(!res.ok){ const e=new Error("github-"+res.status); e.status=res.status; throw e; }
+  if(res.status===204) return null;
+  return res.json();
+}
+$("btnTokenTest").addEventListener("click",async function(){
+  try{
+    const r=await gh("/repos/"+OWNER+"/"+REPO);
+    status("Kết nối OK. Repo: "+r.full_name+" ("+(r.private?"riêng tư":"công khai")+").","ok");
+  }catch(e){
+    if(e.message==="no-token") status("Bạn chưa lưu token.","err");
+    else status("Kết nối thất bại ("+(e.status||"?")+"). Kiểm tra lại token và quyền Contents.","err");
+  }
+});
+
+/* ---------- Dữ liệu ---------- */
+let doc=null, qrFile=null, qrDataUrl=null;
+
+async function loadDoc(){
+  status("Đang tải dữ liệu...","info");
+  try{
+    const res=await fetch("data/streams.json?v="+Date.now(),{cache:"no-store"});
+    if(!res.ok) throw new Error("http");
+    doc=await res.json();
+  }catch(e){
+    doc={site:{title:"VN Chill Cam",tagline:"",announcement:""},cameras:[],radios:[],
+      donate:{qrImage:"assets/donate-qr.svg",bankName:"",accountName:"",accountNumber:"",note:""}};
+  }
+  doc.site=doc.site||{}; doc.donate=doc.donate||{};
+  doc.cameras=doc.cameras||[]; doc.radios=doc.radios||[];
+  renderAll();
+  markClean();
+  clearStatus();
+}
+
+/* ---------- Tabs ---------- */
+document.querySelectorAll(".tab").forEach(function(t){
+  t.addEventListener("click",function(){
+    document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("active");});
+    t.classList.add("active");
+    ["cameras","radios","general"].forEach(function(n){
+      $("tab-"+n).classList.toggle("hidden",n!==t.dataset.tab);
+    });
+  });
+});
+/* ---------- Trình soạn camera / radio ---------- */
+function uid(p){return (p||"id")+"-"+Date.now().toString(36)+Math.floor(Math.random()*999);}
+function camItem(cam,idx){
+  const d=document.createElement("div");
+  d.className="item";
+  d.innerHTML=
+    '<div class="item-head"><b>'+esc(cam.name||"Camera mới")+'</b>'+
+    '<div class="item-tools"><button class="btn small" data-act="test">Mở thử</button>'+
+    '<button class="btn small danger" data-act="del">Xóa</button></div></div>'+
+    '<div class="grid2">'+
+    '<div class="field"><label>Tên camera</label><input type="text" data-f="name" value="'+esc(cam.name||"")+'"></div>'+
+    '<div class="field"><label>Địa điểm</label><input type="text" data-f="location" value="'+esc(cam.location||"")+'"></div>'+
+    "</div>"+
+    '<div class="grid2">'+
+    '<div class="field"><label>Loại</label><select data-f="type">'+
+      ["iframe","hls","mp4","image"].map(function(t){
+        return '<option value="'+t+'"'+(cam.type===t?" selected":"")+'>'+t+"</option>";
+      }).join("")+"</select></div>"+
+    '<div class="field"><label>Tự làm mới ảnh (giây, chỉ cho loại image)</label><input type="number" min="5" data-f="refresh" value="'+esc(cam.refresh||"15")+'"></div>'+
+    "</div>"+
+    '<div class="field"><label>URL</label><input type="text" data-f="url" value="'+esc(cam.url||"")+'" placeholder="https://..."></div>'+
+    '<div class="field"><label>Ghi chú (không bắt buộc)</label><input type="text" data-f="note" value="'+esc(cam.note||"")+'"></div>';
+  bindItem(d,cam,idx,"cameras");
+  return d;
+}
+function radioItem(st,idx){
+  const d=document.createElement("div");
+  d.className="item";
+  d.innerHTML=
+    '<div class="item-head"><b>'+esc(st.name||"Kênh mới")+'</b>'+
+    '<div class="item-tools"><button class="btn small" data-act="test">Mở thử</button>'+
+    '<button class="btn small danger" data-act="del">Xóa</button></div></div>'+
+    '<div class="field"><label>Tên kênh</label><input type="text" data-f="name" value="'+esc(st.name||"")+'"></div>'+
+    '<div class="field"><label>URL stream</label><input type="text" data-f="url" value="'+esc(st.url||"")+'" placeholder="https://..."></div>'+
+    '<div class="field"><label>Ghi chú (không bắt buộc)</label><input type="text" data-f="note" value="'+esc(st.note||"")+'"></div>';
+  bindItem(d,st,idx,"radios");
+  return d;
+}
+function bindItem(d,obj,idx,kind){
+  d.querySelectorAll("[data-f]").forEach(function(inp){
+    inp.addEventListener("input",function(){
+      let v=inp.value;
+      if(inp.dataset.f==="refresh") v=String(Math.max(5,parseInt(v||"15",10)||15));
+      obj[inp.dataset.f]=v;
+      markDirty();
+    });
+  });
+  d.querySelector('[data-act="test"]').addEventListener("click",function(){
+    if(obj.url) window.open(obj.url,"_blank","noopener");
+    else status("Chưa có URL để mở thử.","err");
+  });
+  d.querySelector('[data-act="del"]').addEventListener("click",function(){
+    if(!confirm("Xóa mục này?")) return;
+    doc[kind].splice(idx,1);
+    renderLists(); markDirty();
+  });
+}
+function renderLists(){
+  const cl=$("camList"); cl.innerHTML="";
+  doc.cameras.forEach(function(c,i){ cl.appendChild(camItem(c,i)); });
+  const rl=$("radioList"); rl.innerHTML="";
+  doc.radios.forEach(function(s,i){ rl.appendChild(radioItem(s,i)); });
+}
+$("btnAddCam").addEventListener("click",function(){
+  doc.cameras.push({id:uid("cam"),name:"",location:"",type:"iframe",url:"",refresh:"15",note:""});
+  renderLists(); markDirty();
+});
+$("btnAddRadio").addEventListener("click",function(){
+  doc.radios.push({id:uid("radio"),name:"",url:"",note:""});
+  renderLists(); markDirty();
+});
+
+/* ---------- Tab Chung và Ủng hộ ---------- */
+function renderGeneral(){
+  $("fTitle").value=doc.site.title||"";
+  $("fTagline").value=doc.site.tagline||"";
+  $("fAnnounce").value=doc.site.announcement||"";
+  $("fBank").value=doc.donate.bankName||"";
+  $("fAccName").value=doc.donate.accountName||"";
+  $("fAccNum").value=doc.donate.accountNumber||"";
+  $("fDonateNote").value=doc.donate.note||"";
+  $("qrPreview").src=qrDataUrl||doc.donate.qrImage||"assets/donate-qr.svg";
+  qrFile=null; qrDataUrl=null;
+  ["fTitle","fTagline","fAnnounce"].forEach(function(id){
+    $(id).oninput=function(){
+      doc.site={title:$("fTitle").value,tagline:$("fTagline").value,announcement:$("fAnnounce").value};
+      markDirty();
+    };
+  });
+  ["fBank","fAccName","fAccNum","fDonateNote"].forEach(function(id){
+    $(id).oninput=function(){
+      doc.donate.bankName=$("fBank").value; doc.donate.accountName=$("fAccName").value;
+      doc.donate.accountNumber=$("fAccNum").value; doc.donate.note=$("fDonateNote").value;
+      markDirty();
+    };
+  });
+}
+$("fQrFile").addEventListener("change",function(){
+  const f=this.files[0];
+  if(!f) return;
+  if(f.size>2*1024*1024){ status("Ảnh quá lớn, chọn ảnh dưới 2MB nhé.","err"); this.value=""; return; }
+  qrFile=f;
+  const rd=new FileReader();
+  rd.onload=function(){ qrDataUrl=rd.result; $("qrPreview").src=qrDataUrl; markDirty(); };
+  rd.readAsDataURL(f);
+});
+$("btnPinChange").addEventListener("click",async function(){
+  const a=$("fPin1").value,b=$("fPin2").value;
+  if(a.length<4){ status("Mã PIN phải từ 4 ký tự trở lên.","err"); return; }
+  if(a!==b){ status("Hai lần nhập không khớp.","err"); return; }
+  localStorage.setItem(LS_PIN,await sha256(a));
+  $("fPin1").value=""; $("fPin2").value="";
+  status("Đã đổi mã PIN.","ok");
+});
+function renderAll(){ renderLists(); renderGeneral(); }
+
+/* ---------- Lưu và triển khai ---------- */
+$("btnSave").addEventListener("click",async function(){
+  const btn=this;
+  if(!getToken()){ status("Bạn chưa lưu token GitHub. Làm theo 4 bước ở trên trước nhé.","err"); return; }
+  btn.disabled=true;
+  try{
+    status("Đang tải ảnh QR lên (nếu có)...","info");
+    if(qrFile&&qrDataUrl){
+      const b64=qrDataUrl.split(",")[1];
+      let sha=null;
+      try{ const cur=await gh("/repos/"+OWNER+"/"+REPO+"/contents/assets/donate-qr.png"); sha=cur.sha; }catch(e){}
+      await gh("/repos/"+OWNER+"/"+REPO+"/contents/assets/donate-qr.png","PUT",{
+        message:"Cập nhật ảnh QR ủng hộ",
+        content:b64, sha:sha||undefined
+      });
+      doc.donate.qrImage="assets/donate-qr.png";
+    }
+    status("Đang lưu dữ liệu...","info");
+    let sha=null;
+    try{ const cur=await gh("/repos/"+OWNER+"/"+REPO+"/contents/data/streams.json"); sha=cur.sha; }catch(e){}
+    const body={message:"Cập nhật nội dung từ trang quản trị",content:b64encode(JSON.stringify(doc,null,2))};
+    if(sha) body.sha=sha;
+    const put=await gh("/repos/"+OWNER+"/"+REPO+"/contents/data/streams.json","PUT",body);
+    markClean(); renderGeneral();
+    const commitUrl="https://github.com/"+OWNER+"/"+REPO+"/commit/"+(put.commit&&put.commit.sha||"");
+    status("Đã lưu xong! Vercel sẽ tự triển khai lại trong khoảng 1-2 phút. Xem commit tại: "+commitUrl,"ok");
+  }catch(e){
+    if(e.status===401||e.status===403) status("Token không có quyền. Kiểm tra lại token và quyền Contents: Read and write.","err");
+    else if(e.status===404) status("Không tìm thấy repo hoặc file. Kiểm tra lại tên repo.","err");
+    else status("Lưu thất bại ("+(e.status||e.message)+"). Thử lại nhé.","err");
+  }
+  btn.disabled=false;
+});
+$("btnReload").addEventListener("click",function(){
+  if(!document.querySelector("#dirtyFlag.hidden")&&!confirm("Bạn có thay đổi chưa lưu. Tải lại sẽ mất hết, tiếp tục?")) return;
+  loadDoc();
+});
+
+/* ---------- Khởi động (sau khi qua PIN) ---------- */
+function initAdmin(){
+  refreshTokenStatus();
+  loadDoc();
+}
+$("pinInput").focus();
+</script>
+</body>
+</html>
