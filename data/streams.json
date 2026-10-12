@@ -1,1 +1,29 @@
-{"cameras":[],"donate":{"accountName":"","accountNumber":"","bankName":"","note":"Mỗi sự ủng hộ của bạn giúp mình duy trì web và tìm thêm nhiều camera, kênh radio hay hơn nữa.","qrImage":"assets/donate-qr.svg"},"radios":[],"site":{"announcement":"","tagline":"Ngắm Việt Nam qua camera trực tiếp, nghe radio và âm thanh thiên nhiên để thư giãn.","title":"VN Chill Cam"}}
+{
+  "cameras": [],
+  "donate": {
+    "accountName": "",
+    "accountNumber": "",
+    "bankName": "",
+    "note": "Mỗi sự ủng hộ của bạn giúp mình duy trì web và tìm thêm nhiều camera, kênh radio hay hơn nữa.",
+    "qrImage": "assets/donate-qr.svg"
+  },
+  "radios": [
+    {
+      "id": "radio-mv50kczu28",
+      "name": "Piano Thư Giãn",
+      "url": "https://relaxing-piano.stream.laut.fm/relaxing-piano",
+      "note": ""
+    },
+    {
+      "id": "radio-mv50n6uh447",
+      "name": "",
+      "url": "",
+      "note": ""
+    }
+  ],
+  "site": {
+    "announcement": "",
+    "tagline": "Ngắm Việt Nam qua camera trực tiếp, nghe radio và âm thanh thiên nhiên để thư giãn.",
+    "title": "VN Chill Cam"
+  }
+}
