@@ -284,7 +284,9 @@ function startFx(themeId){
   stopFx();
   const conf = FX_CONF[themeId];
   if (!conf || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  try{
   const cv = document.getElementById("fx"), ctx = cv.getContext("2d");
+  if (!ctx) return;
   let W, H;
   const resize = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; };
   resize(); addEventListener("resize", resize);
@@ -314,6 +316,7 @@ function startFx(themeId){
   };
   step();
   cv._cleanup = () => removeEventListener("resize", resize);
+  }catch(e){ stopFx(); }
 }
 function stopFx(){
   if (fxRAF) cancelAnimationFrame(fxRAF);
