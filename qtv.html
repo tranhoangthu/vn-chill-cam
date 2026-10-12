@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>QTV — VN Chill Cam</title>
+<style>
+:root{--bg:#0e1319;--surface:#161e28;--surface2:#1c2634;--border:#2a3646;--text:#e9eff6;--muted:#9aa8bb;--accent:#f2b23e;--teal:#57c7b8;--danger:#e26d6d;--ok:#6fdc73}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.6}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:50;background:rgba(14,19,25,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.top-inner{display:flex;align-items:center;justify-content:space-between;min-height:60px;padding:8px 0;gap:10px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:18px}.brand span{color:var(--accent)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button{font-family:inherit;cursor:pointer}
+.btn{padding:9px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#062a26;font-weight:700}
+.btn.primary:disabled{opacity:.5;cursor:wait}
+.btn.danger{border-color:#5a2b2b;color:var(--danger);background:transparent}
+.btn.small{padding:6px 12px;font-size:13px;border-radius:8px}
+#loginGate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;width:100%;max-width:380px}
+.login-box h2{margin:0 0 6px}.login-box p{color:var(--muted);font-size:14px;margin:0 0 18px}
+.login-err{color:var(--danger);font-size:14px;min-height:22px;margin-top:8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin:18px 0}
+.card h2{margin:0 0 6px;font-size:19px}
+.card .desc{color:var(--muted);font-size:14px;margin:0 0 14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+.field input[type=text],.field input[type=password],.field input[type=email],.field input[type=number],.field input[type=color],.field select,.field textarea{width:100%;padding:10px 12px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:15px;font-family:inherit}
+.field input[type=color]{height:44px;padding:4px;cursor:pointer}
+.field textarea{resize:vertical;min-height:64px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.checkrow{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:15px}
+.checkrow input{width:18px;height:18px;accent-color:var(--teal)}
+.tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+.tab{padding:10px 20px;border-radius:999px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-size:15px}
+.tab.active{background:var(--surface2);color:var(--text);border-color:var(--teal)}
+.item{border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;background:var(--surface2)}
+.item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:8px}
+.item-head b{font-size:16px}
+.item-tools{display:flex;gap:8px}
+#statusBar{position:sticky;top:60px;z-index:40;margin:0 -20px;padding:10px 20px;display:none;font-size:14px}
+#statusBar.show{display:block}
+#statusBar.ok{background:#0f2c1a;border-bottom:1px solid #1d5c34;color:#a9e8b5}
+#statusBar.err{background:#2c1414;border-bottom:1px solid #5c1d1d;color:#f0a8a8}
+#statusBar.info{background:#14202c;border-bottom:1px solid var(--border);color:var(--muted)}
+.dirty-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--accent);margin-right:6px}
+.qr-preview{max-width:220px;border-radius:10px;background:#fff;display:block;margin-top:8px}
+.hint{font-size:13px;color:var(--muted);margin-top:6px}
+.theme-prev{height:44px;border-radius:9px;margin-top:6px;border:1px solid var(--border)}
+.hidden{display:none!important}
+footer{color:var(--muted);font-size:13px;text-align:center;padding:26px 0 40px}
+</style>
+</head>
+<body>
+
+<div id="loginGate">
+  <div class="login-box">
+    <h2>Đăng nhập quản trị</h2>
+    <p>Dùng email và mật khẩu bạn đã tạo trong Supabase.</p>
+    <div class="field"><label>Email</label><input type="email" id="loginEmail" autocomplete="username"></div>
+    <div class="field"><label>Mật khẩu</label><input type="password" id="loginPass" autocomplete="current-password"></div>
+    <button class="btn primary" id="loginGo" style="width:100%">Đăng nhập</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="brand">VN <span>Chill</span> Cam — QTV</div>
+    <div class="actions">
+      <span id="dirtyFlag" class="hidden" style="font-size:13px;color:var(--accent)"><span class="dirty-dot"></span>Chưa lưu</span>
+      <button class="btn small" id="btnReload">Tải lại</button>
+      <button class="btn small primary" id="btnSave">Lưu — cập nhật web ngay</button>
+      <button class="btn small danger" id="btnLogout">Đăng xuất</button>
+    </div>
+  </div>
+  <div id="statusBar"></div>
+</header>
+
+<main class="wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="content">Nội dung</button>
+    <button class="tab" data-tab="theme">Giao diện</button>
+    <button class="tab" data-tab="donate">Ủng hộ</button>
+  </div>
+
+  <div id="tab-content">
+    <div class="card">
+      <h2>Camera</h2>
+      <p class="desc">Loại <b>iframe</b>: nhúng trang phát (ví dụ YouTube). <b>hls</b>: link .m3u8. <b>mp4</b>: file video trực tiếp. <b>image</b>: ảnh tĩnh tự làm mới.</p>
+      <div id="camList"></div>
+      <button class="btn" id="btnAddCam">+ Thêm camera</button>
+    </div>
+    <div class="card">
+      <h2>Radio</h2>
+      <p class="desc">Dán link stream trực tiếp. File .m3u/.pls sẽ được tự bóc link khi phát.</p>
+      <div id="radioList"></div>
+      <button class="btn" id="btnAddRadio">+ Thêm kênh radio</button>
+    </div>
+    <div class="card">
+      <h2>Thông tin chung</h2>
+      <div class="field"><label>Tiêu đề web</label><input type="text" id="fTitle"></div>
+      <div class="field"><label>Dòng giới thiệu</label><textarea id="fTagline"></textarea></div>
+      <div class="field"><label>Thông báo (để trống nếu không cần)</label><textarea id="fAnnounce"></textarea></div>
+    </div>
+  </div>
+
+  <div id="tab-theme" class="hidden">
+    <div class="card">
+      <h2>Chủ đề</h2>
+      <div class="grid2">
+        <div class="field"><label>Chủ đề mặc định</label><select id="fThemeDefault"></select><div class="theme-prev" id="themePrev"></div></div>
+        <div class="field"><label>Màu nhấn tùy chỉnh (để trống = theo chủ đề)</label>
+          <input type="color" id="fAccent" value="#f2b23e">
+          <div class="actions" style="margin-top:8px"><button class="btn small" id="btnAccentClear">Dùng màu của chủ đề</button></div>
+        </div>
+      </div>
+      <label class="checkrow"><input type="checkbox" id="fSeasonal"> Tự động đổi style theo mùa / lễ hội (Halloween, Giáng sinh, Tết, Trung thu)</label>
+      <label class="checkrow"><input type="checkbox" id="fAllowSwitch"> Cho khách tự đổi chủ đề trên web</label>
+    </div>
+    <div class="card">
+      <h2>Bố cục</h2>
+      <div class="grid2">
+        <div class="field"><label>Số cột lưới camera</label>
+          <select id="fCols"><option value="2">2 cột</option><option value="3">3 cột</option><option value="4">4 cột</option></select></div>
+      </div>
+      <label class="checkrow"><input type="checkbox" data-sec="cameras"> Hiện khu vực Camera</label>
+      <label class="checkrow"><input type="checkbox" data-sec="radios"> Hiện khu vực Radio</label>
+      <label class="checkrow"><input type="checkbox" data-sec="ambient"> Hiện khu vực Âm thanh thư giãn</label>
+      <label class="checkrow"><input type="checkbox" data-sec="donate"> Hiện khu vực Ủng hộ</label>
+    </div>
+  </div>
+
+  <div id="tab-donate" class="hidden">
+    <div class="card">
+      <h2>Ủng hộ</h2>
+      <div class="field"><label>Ảnh QR (chọn ảnh mới để thay thế)</label>
+        <input type="file" id="fQrFile" accept="image/*">
+        <img id="qrPreview" class="qr-preview" alt="Xem trước QR">
+        <p class="hint">Ảnh được tải lên Supabase Storage, web cập nhật ngay sau khi bạn bấm Lưu.</p>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Ngân hàng / Ví</label><input type="text" id="fBank"></div>
+        <div class="field"><label>Chủ tài khoản</label><input type="text" id="fAccName"></div>
+      </div>
+      <div class="field"><label>Số tài khoản</label><input type="text" id="fAccNum"></div>
+      <div class="field"><label>Lời nhắn</label><textarea id="fDonateNote"></textarea></div>
+    </div>
+  </div>
+</main>
+
+<footer>Lưu là web cập nhật ngay lập tức cho mọi người đang xem.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+"use strict";
+const SUPABASE_URL = "https://cgsvwatikslwslbmodwor.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnc3dhdGlrc2x3c2xibW9kdm9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3OTIwNjYsImV4cCI6MjEwNzM2ODA2Nn0.OtSEmlaWQ6wm1kiMJi4vkT9xlIy1V4eKdjgy8sazSBA";
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const THEME_NAMES = { midnight:"Đêm sâu", sunset:"Hoàng hôn", forest:"Rừng xanh", ocean:"Đại dương", sakura:"Anh đào", tet:"Tết", halloween:"Halloween", christmas:"Giáng sinh", midautumn:"Trung thu" };
+const THEME_GRADS = { midnight:"linear-gradient(135deg,#0d1420,#f2b23e)", sunset:"linear-gradient(135deg,#1a1210,#ff7e47)", forest:"linear-gradient(135deg,#0c1811,#7dd87d)", ocean:"linear-gradient(135deg,#081426,#4fc3f7)", sakura:"linear-gradient(135deg,#fdf3f6,#ec407a)", tet:"linear-gradient(135deg,#1c0f0e,#ffd54f)", halloween:"linear-gradient(135deg,#120e1c,#ff6d00)", christmas:"linear-gradient(135deg,#0c1a12,#e53935)", midautumn:"linear-gradient(135deg,#141021,#ffca28)" };
+/* ---------- Tiện ích ---------- */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function status(msg, kind){
+  const bar = $("statusBar");
+  bar.className = "show " + (kind || "info");
+  bar.textContent = msg;
+}
+function clearStatus(){ $("statusBar").className = ""; $("statusBar").textContent = ""; }
+function markDirty(){ $("dirtyFlag").classList.remove("hidden"); }
+function markClean(){ $("dirtyFlag").classList.add("hidden"); }
+function uid(p){ return (p||"id") + "-" + Date.now().toString(36) + Math.floor(Math.random()*999); }
+
+/* ---------- Đăng nhập ---------- */
+async function doLogin(){
+  $("loginErr").textContent = "";
+  const email = $("loginEmail").value.trim(), pass = $("loginPass").value;
+  if (!email || !pass){ $("loginErr").textContent = "Nhập đủ email và mật khẩu nhé."; return; }
+  if (!sb){ $("loginErr").textContent = "Không tải được thư viện kết nối. Kiểm tra mạng rồi thử lại."; return; }
+  $("loginGo").disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  $("loginGo").disabled = false;
+  if (error){ $("loginErr").textContent = "Đăng nhập thất bại: " + error.message; return; }
+  enterAdmin();
+}
+$("loginGo").addEventListener("click", doLogin);
+$("loginPass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+$("btnLogout").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  location.reload();
+});
+function enterAdmin(){
+  $("loginGate").style.display = "none";
+  initAdmin();
+}
+
+/* ---------- Dữ liệu ---------- */
+const DEFAULT_DOC = {
+  site: { title: "VN Chill Cam", tagline: "", announcement: "" },
+  theme: { default: "midnight", seasonalAuto: true, allowSwitch: true, customAccent: "" },
+  sections: { cameras: true, radios: true, ambient: true, donate: true },
+  layout: { camColumns: 3 },
+  cameras: [], radios: [],
+  donate: { qrImage: "", bankName: "", accountName: "", accountNumber: "", note: "" }
+};
+let doc = null, qrFile = null, qrDataUrl = null;
+function mergeDeep(dst, src){
+  for (const k in src){
+    if (src[k] && typeof src[k] === "object" && !Array.isArray(src[k]))
+      mergeDeep(dst[k] = (dst[k] && typeof dst[k] === "object" && !Array.isArray(dst[k])) ? dst[k] : {}, src[k]);
+    else dst[k] = src[k];
+  }
+  return dst;
+}
+async function loadDoc(){
+  status("Đang tải dữ liệu...", "info");
+  try{
+    const { data, error } = await sb.from("site_config").select("data").eq("id", 1).single();
+    if (error && error.code !== "PGRST116") throw error;
+    doc = mergeDeep(JSON.parse(JSON.stringify(DEFAULT_DOC)), (data && data.data) || {});
+  }catch(e){
+    status("Không tải được dữ liệu (" + (e.message || e) + "). Kiểm tra lại Supabase nhé.", "err");
+    return;
+  }
+  renderAll();
+  markClean();
+  clearStatus();
+}
+
+/* ---------- Tabs ---------- */
+document.querySelectorAll(".tab").forEach(t => {
+  t.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+    t.classList.add("active");
+    ["content","theme","donate"].forEach(n => $("tab-"+n).classList.toggle("hidden", n !== t.dataset.tab));
+  });
+});
+
+/* ---------- Soạn camera / radio ---------- */
+function bindItem(d, obj, idx, kind){
+  d.querySelectorAll("[data-f]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      let v = inp.value;
+      if (inp.dataset.f === "refresh") v = String(Math.max(5, parseInt(v || "15", 10) || 15));
+      obj[inp.dataset.f] = v;
+      markDirty();
+    });
+  });
+  d.querySelector('[data-act="test"]').addEventListener("click", () => {
+    if (obj.url) window.open(obj.url, "_blank", "noopener");
+    else status("Chưa có URL để mở thử.", "err");
+  });
+  d.querySelector('[data-act="del"]').addEventListener("click", () => {
+    if (!confirm("Xóa mục này?")) return;
+    doc[kind].splice(idx, 1);
+    renderLists(); markDirty();
+  });
+}
+function camItem(cam, idx){
+  const d = document.createElement("div");
+  d.className = "item";
+  d.innerHTML =
+    '<div class="item-head"><b>' + esc(cam.name || "Camera mới") + '</b>' +
+    '<div class="item-tools"><button class="btn small" data-act="test">Mở thử</button>' +
+    '<button class="btn small danger" data-act="del">Xóa</button></div></div>' +
+    '<div class="grid2">' +
+    '<div class="field"><label>Tên camera</label><input type="text" data-f="name" value="' + esc(cam.name||"") + '"></div>' +
+    '<div class="field"><label>Địa điểm</label><input type="text" data-f="location" value="' + esc(cam.location||"") + '"></div></div>' +
+    '<div class="grid2">' +
+    '<div class="field"><label>Loại</label><select data-f="type">' +
+      ["iframe","hls","mp4","image"].map(t => '<option value="'+t+'"'+(cam.type===t?" selected":"")+'>'+t+"</option>").join("") +
+    "</select></div>" +
+    '<div class="field"><label>Tự làm mới ảnh (giây)</label><input type="number" min="5" data-f="refresh" value="' + esc(cam.refresh||"15") + '"></div></div>' +
+    '<div class="field"><label>URL</label><input type="text" data-f="url" value="' + esc(cam.url||"") + '" placeholder="https://..."></div>' +
+    '<div class="field"><label>Ghi chú</label><input type="text" data-f="note" value="' + esc(cam.note||"") + '"></div>';
+  bindItem(d, cam, idx, "cameras");
+  return d;
+}
+function radioItem(st, idx){
+  const d = document.createElement("div");
+  d.className = "item";
+  d.innerHTML =
+    '<div class="item-head"><b>' + esc(st.name || "Kênh mới") + '</b>' +
+    '<div class="item-tools"><button class="btn small" data-act="test">Mở thử</button>' +
+    '<button class="btn small danger" data-act="del">Xóa</button></div></div>' +
+    '<div class="field"><label>Tên kênh</label><input type="text" data-f="name" value="' + esc(st.name||"") + '"></div>' +
+    '<div class="field"><label>URL stream</label><input type="text" data-f="url" value="' + esc(st.url||"") + '" placeholder="https://..."></div>' +
+    '<div class="field"><label>Ghi chú</label><input type="text" data-f="note" value="' + esc(st.note||"") + '"></div>';
+  bindItem(d, st, idx, "radios");
+  return d;
+}
+function renderLists(){
+  const cl = $("camList"); cl.innerHTML = "";
+  doc.cameras.forEach((c,i) => cl.appendChild(camItem(c,i)));
+  const rl = $("radioList"); rl.innerHTML = "";
+  doc.radios.forEach((s,i) => rl.appendChild(radioItem(s,i)));
+  $("fTitle").value = doc.site.title || "";
+  $("fTagline").value = doc.site.tagline || "";
+  $("fAnnounce").value = doc.site.announcement || "";
+}
+$("btnAddCam").addEventListener("click", () => {
+  doc.cameras.push({ id: uid("cam"), name: "", location: "", type: "iframe", url: "", refresh: "15", note: "" });
+  renderLists(); markDirty();
+  $("camList").lastChild.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+$("btnAddRadio").addEventListener("click", () => {
+  doc.radios.push({ id: uid("radio"), name: "", url: "", note: "" });
+  renderLists(); markDirty();
+  $("radioList").lastChild.scrollIntoView({ behavior: "smooth", block: "center" });
+});
+["fTitle","fTagline","fAnnounce"].forEach(id => {
+  $(id).addEventListener("input", () => {
+    doc.site.title = $("fTitle").value;
+    doc.site.tagline = $("fTagline").value;
+    doc.site.announcement = $("fAnnounce").value;
+    markDirty();
+  });
+});
+/* ---------- Tab Giao diện ---------- */
+function renderThemeTab(){
+  const sel = $("fThemeDefault");
+  sel.innerHTML = Object.keys(THEME_NAMES).map(id =>
+    '<option value="' + id + '"' + (doc.theme.default === id ? " selected" : "") + ">" + THEME_NAMES[id] + "</option>"
+  ).join("");
+  const updPrev = () => { $("themePrev").style.background = THEME_GRADS[sel.value] || "#333"; };
+  updPrev();
+  sel.onchange = () => { doc.theme.default = sel.value; updPrev(); markDirty(); };
+  $("fSeasonal").checked = doc.theme.seasonalAuto !== false;
+  $("fSeasonal").onchange = e => { doc.theme.seasonalAuto = e.target.checked; markDirty(); };
+  $("fAllowSwitch").checked = doc.theme.allowSwitch !== false;
+  $("fAllowSwitch").onchange = e => { doc.theme.allowSwitch = e.target.checked; markDirty(); };
+  $("fAccent").value = /^#[0-9a-fA-F]{6}$/.test(doc.theme.customAccent || "") ? doc.theme.customAccent : "#f2b23e";
+  $("fAccent").oninput = e => { doc.theme.customAccent = e.target.value; markDirty(); };
+  $("btnAccentClear").onclick = () => { doc.theme.customAccent = ""; markDirty(); status("Đã về màu mặc định của chủ đề. Nhớ bấm Lưu.", "info"); };
+  $("fCols").value = String(doc.layout.camColumns || 3);
+  $("fCols").onchange = e => { doc.layout.camColumns = parseInt(e.target.value, 10); markDirty(); };
+  document.querySelectorAll("[data-sec]").forEach(cb => {
+    const k = cb.dataset.sec;
+    cb.checked = doc.sections[k] !== false;
+    cb.onchange = e => { doc.sections[k] = e.target.checked; markDirty(); };
+  });
+}
+
+/* ---------- Tab Ủng hộ ---------- */
+function renderDonateTab(){
+  $("fBank").value = doc.donate.bankName || "";
+  $("fAccName").value = doc.donate.accountName || "";
+  $("fAccNum").value = doc.donate.accountNumber || "";
+  $("fDonateNote").value = doc.donate.note || "";
+  $("qrPreview").src = qrDataUrl || doc.donate.qrImage || "";
+  $("qrPreview").style.display = ($("qrPreview").src ? "" : "none");
+  qrFile = null; qrDataUrl = null;
+  [["fBank","bankName"],["fAccName","accountName"],["fAccNum","accountNumber"],["fDonateNote","note"]].forEach(([id, key]) => {
+    $(id).oninput = () => { doc.donate[key] = $(id).value; markDirty(); };
+  });
+}
+$("fQrFile").addEventListener("change", function(){
+  const f = this.files[0];
+  if (!f) return;
+  if (f.size > 2*1024*1024){ status("Ảnh quá lớn, chọn ảnh dưới 2MB nhé.", "err"); this.value = ""; return; }
+  qrFile = f;
+  const rd = new FileReader();
+  rd.onload = () => { qrDataUrl = rd.result; $("qrPreview").src = qrDataUrl; $("qrPreview").style.display = ""; markDirty(); };
+  rd.readAsDataURL(f);
+});
+
+/* ---------- Lưu ---------- */
+async function uploadQrIfNeeded(){
+  if (!qrFile) return;
+  status("Đang tải ảnh QR lên...", "info");
+  const { error } = await sb.storage.from("assets").upload("donate-qr.png", qrFile, { upsert: true, contentType: qrFile.type || "image/png" });
+  if (error) throw new Error("Tải ảnh thất bại: " + error.message);
+  const { data } = sb.storage.from("assets").getPublicUrl("donate-qr.png");
+  doc.donate.qrImage = data.publicUrl;
+}
+$("btnSave").addEventListener("click", async () => {
+  const btn = $("btnSave");
+  btn.disabled = true;
+  try{
+    await uploadQrIfNeeded();
+    status("Đang lưu...", "info");
+    const { error } = await sb.from("site_config")
+      .upsert({ id: 1, data: doc, updated_at: new Date().toISOString() }, { onConflict: "id" });
+    if (error) throw error;
+    markClean();
+    renderDonateTab();
+    status("Đã lưu xong. Web cập nhật ngay lập tức cho mọi người đang xem.", "ok");
+  }catch(e){
+    status("Lưu thất bại: " + (e.message || e), "err");
+  }
+  btn.disabled = false;
+});
+$("btnReload").addEventListener("click", () => {
+  if (!$("dirtyFlag").classList.contains("hidden") && !confirm("Bạn có thay đổi chưa lưu. Tải lại sẽ mất hết, tiếp tục?")) return;
+  loadDoc();
+});
+
+/* ---------- Khởi động ---------- */
+function renderAll(){ renderLists(); renderThemeTab(); renderDonateTab(); }
+async function initAdmin(){ await loadDoc(); }
+(async function boot(){
+  if (!sb){
+    $("loginErr").textContent = "Không tải được thư viện kết nối. Kiểm tra mạng rồi tải lại trang.";
+    return;
+  }
+  const { data } = await sb.auth.getSession();
+  if (data && data.session) enterAdmin();
+  else $("loginEmail").focus();
+})();
+</script>
+</body>
+</html>

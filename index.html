@@ -1,39 +1,58 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="midnight">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Ngắm Việt Nam qua camera trực tiếp, nghe radio và âm thanh thiên nhiên để thư giãn.">
 <title>VN Chill Cam</title>
 <style>
-:root{
-  --bg:#0e1319; --surface:#161e28; --surface2:#1c2634; --border:#2a3646;
-  --text:#e9eff6; --muted:#9aa8bb; --accent:#f2b23e; --teal:#57c7b8; --danger:#e26d6d;
-}
+/* ============ Chủ đề ============ */
+html[data-theme="midnight"]{--bg:#0d1420;--surface:#16202f;--surface2:#1d2a3d;--border:#2b3c52;--text:#e9eff6;--muted:#93a3b8;--accent:#f2b23e;--accent2:#57c7b8;--hero-glow:rgba(242,178,62,.12)}
+html[data-theme="sunset"]{--bg:#1a1210;--surface:#241a16;--surface2:#2f231c;--border:#4a3a2c;--text:#f7ece2;--muted:#b89f8d;--accent:#ff7e47;--accent2:#ffb347;--hero-glow:rgba(255,126,71,.14)}
+html[data-theme="forest"]{--bg:#0c1811;--surface:#13241a;--surface2:#1a3021;--border:#2c4a35;--text:#e9f5ec;--muted:#93b89c;--accent:#7dd87d;--accent2:#3fa34d;--hero-glow:rgba(125,216,125,.10)}
+html[data-theme="ocean"]{--bg:#081426;--surface:#0f2036;--surface2:#152a44;--border:#27466a;--text:#e8f2fb;--muted:#8ba9c7;--accent:#4fc3f7;--accent2:#0288d1;--hero-glow:rgba(79,195,247,.12)}
+html[data-theme="sakura"]{--bg:#fdf3f6;--surface:#ffffff;--surface2:#fbe7ee;--border:#f0d3df;--text:#4a2c38;--muted:#96707f;--accent:#ec407a;--accent2:#7e57c2;--hero-glow:rgba(236,64,122,.10)}
+html[data-theme="tet"]{--bg:#1c0f0e;--surface:#2a1512;--surface2:#3a1d18;--border:#5c2f24;--text:#f9ecdc;--muted:#c49a83;--accent:#ffd54f;--accent2:#e53935;--hero-glow:rgba(255,213,79,.14)}
+html[data-theme="halloween"]{--bg:#120e1c;--surface:#1c1529;--surface2:#251c36;--border:#3d2f56;--text:#f0e9f7;--muted:#a893c4;--accent:#ff6d00;--accent2:#7c4dff;--hero-glow:rgba(255,109,0,.14)}
+html[data-theme="christmas"]{--bg:#0c1a12;--surface:#122619;--surface2:#193420;--border:#2a5233;--text:#ecf6ee;--muted:#93bd9b;--accent:#e53935;--accent2:#43a047;--hero-glow:rgba(229,57,53,.12)}
+html[data-theme="midautumn"]{--bg:#141021;--surface:#1e1830;--surface2:#292040;--border:#443566;--text:#f3edfb;--muted:#ab9ccb;--accent:#ffca28;--accent2:#ff8f00;--hero-glow:rgba(255,202,40,.13)}
+
+/* ============ Khung ============ */
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6}
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;line-height:1.6;
+  transition:background .5s,color .5s}
 body.has-player{padding-bottom:78px}
-a{color:var(--teal)}
-.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-header.top{position:sticky;top:0;z-index:50;background:rgba(14,19,25,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+a{color:var(--accent2)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+#fx{position:fixed;inset:0;z-index:1;pointer-events:none}
+header.top{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
 .top-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
 .brand{font-weight:800;font-size:20px;letter-spacing:.5px;color:var(--text);text-decoration:none}
 .brand span{color:var(--accent)}
 nav a{margin-left:16px;color:var(--muted);text-decoration:none;font-size:15px}
 nav a:hover{color:var(--text)}
-nav a.admin-link{border:1px solid var(--border);border-radius:999px;padding:5px 14px;font-size:13px}
-.hero{padding:54px 0 30px;text-align:center}
-.hero h1{font-size:clamp(30px,5vw,48px);margin:0 0 10px;letter-spacing:.5px}
+.hero{padding:60px 0 30px;text-align:center;position:relative}
+.hero::before{content:"";position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:min(720px,90vw);height:280px;
+  background:radial-gradient(ellipse at center,var(--hero-glow),transparent 70%);pointer-events:none}
+.hero h1{font-size:clamp(32px,5.5vw,52px);margin:0 0 10px;letter-spacing:.5px;position:relative}
 .hero h1 span{color:var(--accent)}
-.hero p{color:var(--muted);margin:0 auto;max-width:660px;font-size:17px}
-.announce{margin:22px auto 0;max-width:720px;background:#2a2410;border:1px solid #6b5518;color:#f5d97e;padding:10px 18px;border-radius:10px;font-size:15px}
+.hero p{color:var(--muted);margin:0 auto;max-width:660px;font-size:17px;position:relative}
+.season-badge{display:inline-block;margin-bottom:14px;padding:6px 18px;border-radius:999px;font-size:13px;font-weight:700;
+  background:var(--accent);color:var(--bg);letter-spacing:1px;text-transform:uppercase}
+.announce{margin:22px auto 0;max-width:720px;background:color-mix(in srgb,var(--accent) 14%,transparent);
+  border:1px solid var(--accent);color:var(--text);padding:10px 18px;border-radius:10px;font-size:15px;position:relative}
 section.block{padding:26px 0}
 .block h2{font-size:24px;margin:0 0 4px}
 .block .sub{color:var(--muted);margin:0 0 18px;font-size:15px}
-.cam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
-.cam-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+/* Lưới camera */
+.cam-grid{display:grid;gap:18px}
+.cam-grid.cols-2{grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
+.cam-grid.cols-3{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.cam-grid.cols-4{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.cam-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.cam-card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.35)}
 .player{position:relative;aspect-ratio:16/9;background:#000}
 .player iframe,.player video,.player img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
 .player .p-err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;padding:16px;text-align:center}
@@ -42,64 +61,77 @@ section.block{padding:26px 0}
 .loc{font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:3px 10px;border-radius:20px;white-space:nowrap}
 .img-note{position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.65);color:#cfd8e3;font-size:11px;padding:3px 9px;border-radius:999px}
 .empty{border:1.5px dashed var(--border);border-radius:14px;padding:38px 20px;text-align:center;color:var(--muted);font-size:15px}
+/* Radio */
 .station-list{display:flex;flex-wrap:wrap;gap:10px}
-.station{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:10px 18px;cursor:pointer;font-size:15px;color:var(--text);display:flex;align-items:center;gap:9px;font-family:inherit}
-.station:hover{border-color:var(--teal)}
-.station.playing{border-color:var(--teal);background:#12332f}
+.station{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:10px 18px;cursor:pointer;font-size:15px;color:var(--text);display:flex;align-items:center;gap:9px;font-family:inherit;transition:border-color .2s,transform .2s}
+.station:hover{border-color:var(--accent2);transform:translateY(-2px)}
+.station.playing{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 16%,transparent)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
-.station.playing .dot{background:var(--teal)}
+.station.playing .dot{background:var(--accent2)}
+/* Âm thanh */
 .amb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
 .amb-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px}
 .amb-card h3{margin:0 0 4px;font-size:16px}
 .amb-card p{margin:0 0 12px;color:var(--muted);font-size:13px}
 .amb-row{display:flex;align-items:center;gap:10px}
 .toggle{min-width:66px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px;font-family:inherit}
-.toggle.on{background:var(--teal);border-color:var(--teal);color:#062a26;font-weight:700}
-input[type=range]{flex:1;accent-color:var(--teal)}
+.toggle.on{background:var(--accent2);border-color:var(--accent2);color:#fff;font-weight:700}
+input[type=range]{flex:1;accent-color:var(--accent2)}
+/* Ủng hộ */
 .donate-box{display:grid;grid-template-columns:280px 1fr;gap:26px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;align-items:start}
 @media(max-width:700px){.donate-box{grid-template-columns:1fr}}
 .donate-box img{width:100%;max-width:280px;border-radius:12px;background:#fff;display:block}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:15px}
 .kv span{color:var(--muted)}
 .copybtn{margin-top:16px;padding:10px 20px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--accent);cursor:pointer;font-size:15px;font-family:inherit}
-.copybtn:hover{background:rgba(242,178,62,.12)}
-#playerbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:rgba(16,24,32,.96);border-top:1px solid var(--border);backdrop-filter:blur(8px);display:none}
+.copybtn:hover{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+/* Chủ đề */
+.swatch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.swatch{border:2px solid var(--border);border-radius:12px;padding:0;overflow:hidden;cursor:pointer;background:var(--surface);font-family:inherit;color:var(--text)}
+.swatch .prev{height:56px}
+.swatch .nm{padding:8px;font-size:14px;text-align:center}
+.swatch.active{border-color:var(--accent)}
+/* Trình phát radio */
+#playerbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:color-mix(in srgb,var(--bg) 94%,transparent);border-top:1px solid var(--border);backdrop-filter:blur(10px);display:none}
 #playerbar.show{display:block}
 .pb-inner{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:14px}
-.pb-btn{width:46px;height:46px;border-radius:50%;border:0;background:var(--teal);color:#062a26;font-size:18px;cursor:pointer;flex:none;line-height:1}
-.pb-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.pb-btn{width:46px;height:46px;border-radius:50%;border:0;background:var(--accent2);color:#fff;font-size:18px;cursor:pointer;flex:none;line-height:1}
+.pb-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;color:var(--text)}
 .pb-title small{color:var(--muted);display:block;font-size:12px}
 .pb-vol{display:flex;align-items:center;gap:8px;flex:none}
 .pb-vol input{width:110px}
-.pb-close{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;flex:none}
-footer{border-top:1px solid var(--border);margin-top:34px;padding:22px 0 40px;color:var(--muted);font-size:14px;text-align:center}
+.pb-close{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px;flex:none;font-family:inherit}
+footer{border-top:1px solid var(--border);margin-top:34px;padding:22px 0 40px;color:var(--muted);font-size:14px;text-align:center;position:relative;z-index:2}
+#connErr{display:none;max-width:640px;margin:18px auto 0;background:color-mix(in srgb,#e53935 12%,transparent);border:1px solid #e53935;color:var(--text);padding:10px 18px;border-radius:10px;font-size:14px}
 </style>
 </head>
 <body>
+<canvas id="fx"></canvas>
 <header class="top">
   <div class="wrap top-inner">
-    <a class="brand" href="#">VN <span>Chill</span> Cam</a>
-    <nav>
-      <a href="#camera">Camera</a>
-      <a href="#radio">Radio</a>
-      <a href="#ambient">Âm thanh</a>
-      <a href="#donate">Ủng hộ</a>
-      <a class="admin-link" href="admin.html">Quản trị</a>
+    <a class="brand" href="#" id="brandLink">VN <span>Chill</span> Cam</a>
+    <nav id="mainNav">
+      <a href="#camera" data-sec="cameras">Camera</a>
+      <a href="#radio" data-sec="radios">Radio</a>
+      <a href="#ambient" data-sec="ambient">Âm thanh</a>
+      <a href="#donate" data-sec="donate">Ủng hộ</a>
     </nav>
   </div>
 </header>
 
 <main class="wrap">
   <section class="hero">
-    <h1>VN <span>Chill</span> Cam</h1>
+    <span class="season-badge" id="seasonBadge" style="display:none"></span>
+    <h1 id="heroTitle">VN <span>Chill</span> Cam</h1>
     <p id="tagline">Đang tải...</p>
     <div id="announce" class="announce" style="display:none"></div>
+    <div id="connErr">Không kết nối được dữ liệu. Bạn kiểm tra lại mạng rồi tải lại trang nhé.</div>
   </section>
 
   <section class="block" id="camera">
     <h2>Camera trực tiếp</h2>
     <p class="sub">Những góc nhìn khắp Việt Nam, cập nhật liên tục.</p>
-    <div id="camGrid" class="cam-grid"></div>
+    <div id="camGrid" class="cam-grid cols-3"></div>
   </section>
 
   <section class="block" id="radio">
@@ -112,6 +144,12 @@ footer{border-top:1px solid var(--border);margin-top:34px;padding:22px 0 40px;co
     <h2>Âm thanh thư giãn</h2>
     <p class="sub">Âm thanh tạo trực tiếp trên trình duyệt của bạn, không cần mạng. Bật nhiều lớp cùng lúc và chỉnh âm lượng riêng.</p>
     <div class="amb-grid" id="ambGrid"></div>
+  </section>
+
+  <section class="block" id="themeSec">
+    <h2>Chủ đề</h2>
+    <p class="sub">Đổi giao diện theo tâm trạng. Web cũng tự khoác áo mới vào các dịp lễ trong năm.</p>
+    <div class="swatch-grid" id="swatchGrid"></div>
   </section>
 
   <section class="block" id="donate">
@@ -132,351 +170,530 @@ footer{border-top:1px solid var(--border);margin-top:34px;padding:22px 0 40px;co
   <div class="pb-inner">
     <button class="pb-btn" id="pbToggle" title="Phát / Tạm dừng">❚❚</button>
     <div class="pb-title"><span id="pbName">—</span><small id="pbStatus">Đang tải...</small></div>
-    <div class="pb-vol"><input type="range" id="pbVol" min="0" max="100" value="80"></div>
+    <div class="pb-vol"><input type="range" id="pbVol" min="0" max="100" value="80" aria-label="Âm lượng radio"></div>
     <button class="pb-close" id="pbClose">Đóng</button>
   </div>
 </div>
 
 <footer>
-  <div class="wrap">VN Chill Cam — ngắm, nghe và thư giãn. Nội dung camera và radio thuộc về các đơn vị phát sóng.</div>
+  <div class="wrap" id="footText">VN Chill Cam — ngắm, nghe và thư giãn.</div>
 </footer>
 
 <noscript><p style="text-align:center">Trang này cần bật JavaScript để hoạt động.</p></noscript>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
-/* ---------- Tiện ích ---------- */
-function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
-function escAttr(s){return esc(s).replace(/`/g,"&#96;");}
-
-async function loadData(){
-  const res = await fetch("data/streams.json?v="+Date.now(),{cache:"no-store"});
-  if(!res.ok) throw new Error("HTTP "+res.status);
-  return res.json();
+/* ================= Cấu hình ================= */
+const SUPABASE_URL = "https://cgsvwatikslwslbmodwor.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnc3dhdGlrc2x3c2xibW9kdm9yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3OTIwNjYsImV4cCI6MjEwNzM2ODA2Nn0.OtSEmlaWQ6wm1kiMJi4vkT9xlIy1V4eKdjgy8sazSBA";
+const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+/* ================= Dữ liệu mặc định ================= */
+const DEFAULTS = {
+  site: { title: "VN Chill Cam",
+    tagline: "Ngắm Việt Nam qua camera trực tiếp, nghe radio và âm thanh thiên nhiên để thư giãn.",
+    announcement: "" },
+  theme: { default: "midnight", seasonalAuto: true, allowSwitch: true, customAccent: "" },
+  sections: { cameras: true, radios: true, ambient: true, donate: true },
+  layout: { camColumns: 3 },
+  cameras: [], radios: [],
+  donate: { qrImage: "", bankName: "", accountName: "", accountNumber: "",
+    note: "Mỗi sự ủng hộ của bạn giúp mình duy trì web và tìm thêm nhiều camera, kênh radio hay hơn nữa." }
+};
+let DATA = JSON.parse(JSON.stringify(DEFAULTS));
+function mergeDeep(dst, src){
+  for (const k in src){
+    if (src[k] && typeof src[k] === "object" && !Array.isArray(src[k]))
+      mergeDeep(dst[k] = (dst[k] && typeof dst[k] === "object" && !Array.isArray(dst[k])) ? dst[k] : {}, src[k]);
+    else dst[k] = src[k];
+  }
+  return dst;
 }
 
-/* ---------- HLS (dùng chung cho camera và radio) ---------- */
+/* ================= Chủ đề ================= */
+const THEMES = {
+  midnight:  { name: "Đêm sâu",   grad: "linear-gradient(135deg,#0d1420,#f2b23e)" },
+  sunset:    { name: "Hoàng hôn", grad: "linear-gradient(135deg,#1a1210,#ff7e47)" },
+  forest:    { name: "Rừng xanh", grad: "linear-gradient(135deg,#0c1811,#7dd87d)" },
+  ocean:     { name: "Đại dương", grad: "linear-gradient(135deg,#081426,#4fc3f7)" },
+  sakura:    { name: "Anh đào",   grad: "linear-gradient(135deg,#fdf3f6,#ec407a)" },
+  tet:       { name: "Tết",       grad: "linear-gradient(135deg,#1c0f0e,#ffd54f)", badge: "Phiên bản Tết" },
+  halloween: { name: "Halloween", grad: "linear-gradient(135deg,#120e1c,#ff6d00)", badge: "Phiên bản Halloween" },
+  christmas: { name: "Giáng sinh",grad: "linear-gradient(135deg,#0c1a12,#e53935)", badge: "Phiên bản Giáng sinh" },
+  midautumn: { name: "Trung thu", grad: "linear-gradient(135deg,#141021,#ffca28)", badge: "Phiên bản Trung thu" }
+};
+function seasonalThemeNow(){
+  const n = new Date(), m = n.getMonth() + 1, d = n.getDate();
+  const inR = (m1,d1,m2,d2) => (m > m1 || (m === m1 && d >= d1)) && (m < m2 || (m === m2 && d <= d2));
+  if (inR(10,1,10,31)) return "halloween";
+  if (inR(12,1,12,26)) return "christmas";
+  if (inR(1,20,2,20))  return "tet";
+  if (inR(9,1,9,20))   return "midautumn";
+  return null;
+}
+function effectiveTheme(){
+  const v = localStorage.getItem("vcc_theme");
+  if (v && THEMES[v]) return { id: v, seasonal: !!THEMES[v].badge };
+  if (DATA.theme.seasonalAuto){
+    const s = seasonalThemeNow();
+    if (s) return { id: s, seasonal: true };
+  }
+  const d = DATA.theme.default;
+  return { id: THEMES[d] ? d : "midnight", seasonal: !!(THEMES[d] && THEMES[d].badge) };
+}
+function applyTheme(){
+  const t = effectiveTheme();
+  document.documentElement.dataset.theme = t.id;
+  const root = document.documentElement.style;
+  if (DATA.theme.customAccent) root.setProperty("--accent", DATA.theme.customAccent);
+  else root.removeProperty("--accent");
+  const badge = document.getElementById("seasonBadge");
+  if (t.seasonal && THEMES[t.id].badge){
+    badge.textContent = THEMES[t.id].badge; badge.style.display = "";
+    startFx(t.id);
+  } else { badge.style.display = "none"; stopFx(); }
+  document.querySelectorAll(".swatch").forEach(s => s.classList.toggle("active", s.dataset.theme === t.id));
+  document.getElementById("themeSec").style.display = DATA.theme.allowSwitch ? "" : "none";
+}
+function renderSwatches(){
+  const grid = document.getElementById("swatchGrid");
+  grid.innerHTML = "";
+  Object.keys(THEMES).forEach(id => {
+    const b = document.createElement("button");
+    b.className = "swatch"; b.dataset.theme = id;
+    b.innerHTML = '<div class="prev" style="background:' + THEMES[id].grad + '"></div>' +
+      '<div class="nm">' + THEMES[id].name + "</div>";
+    b.addEventListener("click", () => {
+      localStorage.setItem("vcc_theme", id);
+      applyTheme();
+    });
+    b.addEventListener("dblclick", () => { localStorage.removeItem("vcc_theme"); applyTheme(); });
+    b.title = "Bấm đúp để về chế độ tự động";
+    grid.appendChild(b);
+  });
+}
+
+/* ================= Hiệu ứng hạt theo mùa ================= */
+const FX_CONF = {
+  halloween: { colors: ["#ff6d00","#7c4dff","#ffb74d"], count: 45, speed: .7, shape: "rect" },
+  christmas: { colors: ["#ffffff","#cfe8ff","#ffffff"], count: 70, speed: .5, shape: "circle" },
+  tet:       { colors: ["#ffd54f","#e53935","#ff8a65"], count: 50, speed: .8, shape: "petal" },
+  midautumn: { colors: ["#ffca28","#ffe082","#fff3c4"], count: 35, speed: .45, shape: "circle" }
+};
+let fxRAF = null;
+function startFx(themeId){
+  stopFx();
+  const conf = FX_CONF[themeId];
+  if (!conf || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv = document.getElementById("fx"), ctx = cv.getContext("2d");
+  let W, H;
+  const resize = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; };
+  resize(); addEventListener("resize", resize);
+  const ps = Array.from({length: conf.count}, () => ({
+    x: Math.random()*W, y: Math.random()*H,
+    r: 2 + Math.random()*4, vy: .3 + Math.random()*conf.speed,
+    vx: (Math.random()-.5)*.6, a: Math.random()*Math.PI*2, va: (Math.random()-.5)*.05,
+    c: conf.colors[Math.floor(Math.random()*conf.colors.length)],
+    o: .35 + Math.random()*.45
+  }));
+  const step = () => {
+    ctx.clearRect(0,0,W,H);
+    for (const p of ps){
+      p.y += p.vy; p.x += p.vx + Math.sin(p.a)*.3; p.a += p.va;
+      if (p.y > H+10){ p.y = -10; p.x = Math.random()*W; }
+      if (p.x > W+10) p.x = -10; if (p.x < -10) p.x = W+10;
+      ctx.save(); ctx.globalAlpha = p.o; ctx.fillStyle = p.c;
+      ctx.translate(p.x, p.y); ctx.rotate(p.a);
+      if (conf.shape === "petal"){
+        ctx.beginPath(); ctx.ellipse(0,0,p.r,p.r*1.8,0,0,Math.PI*2); ctx.fill();
+      } else if (conf.shape === "rect"){
+        ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*.7);
+      } else { ctx.beginPath(); ctx.arc(0,0,p.r,0,Math.PI*2); ctx.fill(); }
+      ctx.restore();
+    }
+    fxRAF = requestAnimationFrame(step);
+  };
+  step();
+  cv._cleanup = () => removeEventListener("resize", resize);
+}
+function stopFx(){
+  if (fxRAF) cancelAnimationFrame(fxRAF);
+  fxRAF = null;
+  const cv = document.getElementById("fx");
+  if (cv){ cv.getContext("2d").clearRect(0,0,cv.width,cv.height); if (cv._cleanup) cv._cleanup(); }
+}
+/* ================= Nạp dữ liệu ================= */
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+let pollTimer = null;
+async function fetchData(){
+  if (!sb) throw new Error("no-sb");
+  const { data, error } = await sb.from("site_config").select("data").eq("id", 1).single();
+  if (error) throw error;
+  return data && data.data ? data.data : {};
+}
+async function reload(){
+  try{
+    const fresh = await fetchData();
+    DATA = mergeDeep(JSON.parse(JSON.stringify(DEFAULTS)), fresh);
+    document.getElementById("connErr").style.display = "none";
+    renderAll();
+  }catch(e){
+    document.getElementById("connErr").style.display = "";
+  }
+}
+function watchLive(){
+  if (!sb) return;
+  try{
+    sb.channel("vcc-site")
+      .on("postgres_changes", { event: "*", schema: "public", table: "site_config", filter: "id=eq.1" }, () => reload())
+      .subscribe(status => { if (status !== "SUBSCRIBED" && !pollTimer) pollTimer = setInterval(reload, 30000); });
+  }catch(e){
+    if (!pollTimer) pollTimer = setInterval(reload, 30000);
+  }
+}
+
+/* ================= HLS dùng chung ================= */
 let hlsJsPromise = null;
 function loadHlsJs(){
-  if(window.Hls) return Promise.resolve();
-  if(!hlsJsPromise){
-    hlsJsPromise = new Promise(function(resolve,reject){
-      const s=document.createElement("script");
-      s.src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js";
-      s.onload=resolve; s.onerror=reject;
-      document.head.appendChild(s);
-    });
-  }
+  if (window.Hls) return Promise.resolve();
+  if (!hlsJsPromise) hlsJsPromise = new Promise((res, rej) => {
+    const s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js";
+    s.onload = res; s.onerror = rej; document.head.appendChild(s);
+  });
   return hlsJsPromise;
 }
-async function attachHls(media,url){
+async function attachHls(media, url){
   try{
     await loadHlsJs();
-    if(window.Hls && window.Hls.isSupported()){
-      const hls=new window.Hls({maxBufferLength:30});
-      hls.loadSource(url);
-      hls.attachMedia(media);
+    if (window.Hls && window.Hls.isSupported()){
+      const hls = new window.Hls({ maxBufferLength: 30 });
+      hls.loadSource(url); hls.attachMedia(media);
       return true;
     }
-  }catch(e){/* bỏ qua, thử phát trực tiếp */}
-  try{ media.src=url; return true; }catch(e2){ return false; }
+  }catch(e){}
+  try{ media.src = url; return true; }catch(e2){ return false; }
 }
 
-/* ---------- Camera ---------- */
-const imgTimers=[];
-function playerError(player,msg){
-  player.innerHTML='<div class="p-err">'+esc(msg||"Không tải được luồng này. Có thể link đã hỏng, mình sẽ kiểm tra lại sớm.")+"</div>";
+/* ================= Camera ================= */
+function playerError(player, msg){
+  player.innerHTML = '<div class="p-err">' + esc(msg || "Không tải được luồng này. Có thể link đã hỏng, mình sẽ kiểm tra lại sớm.") + "</div>";
 }
 function buildCamera(cam){
-  const card=document.createElement("article");
-  card.className="cam-card";
-  const player=document.createElement("div");
-  player.className="player";
-  const type=(cam.type||"iframe").toLowerCase();
-
-  if(type==="iframe"){
-    const f=document.createElement("iframe");
-    f.src=cam.url; f.title=cam.name||"Camera";
-    f.loading="lazy";
-    f.setAttribute("allow","accelerometer; autoplay; encrypted-media; picture-in-picture");
-    f.setAttribute("allowfullscreen","");
+  const card = document.createElement("article");
+  card.className = "cam-card";
+  const player = document.createElement("div");
+  player.className = "player";
+  const type = (cam.type || "iframe").toLowerCase();
+  if (type === "iframe"){
+    const f = document.createElement("iframe");
+    f.src = cam.url; f.title = cam.name || "Camera"; f.loading = "lazy";
+    f.setAttribute("allow", "accelerometer; autoplay; encrypted-media; picture-in-picture");
+    f.setAttribute("allowfullscreen", "");
     player.appendChild(f);
-  }else if(type==="image"){
-    const img=document.createElement("img");
-    img.alt=cam.name||"Camera"; img.loading="lazy";
-    const refresh=Math.max(5,parseInt(cam.refresh||"15",10)||15);
-    const tick=function(){ img.src=cam.url+(cam.url.indexOf("?")>=0?"&":"?")+"t="+Date.now(); };
-    img.onerror=function(){ playerError(player,"Không tải được ảnh camera. Có thể link đã hỏng."); };
+  } else if (type === "image"){
+    const img = document.createElement("img");
+    img.alt = cam.name || "Camera"; img.loading = "lazy";
+    const refresh = Math.max(5, parseInt(cam.refresh || "15", 10) || 15);
+    const tick = () => { img.src = cam.url + (cam.url.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now(); };
+    img.onerror = () => playerError(player, "Không tải được ảnh camera. Có thể link đã hỏng.");
     tick();
-    imgTimers.push(setInterval(tick,refresh*1000));
+    const timer = setInterval(tick, refresh * 1000);
+    img._timer = timer;
     player.appendChild(img);
-    const note=document.createElement("span");
-    note.className="img-note";
-    note.textContent="Ảnh tĩnh, tự làm mới mỗi "+refresh+" giây";
+    const note = document.createElement("span");
+    note.className = "img-note";
+    note.textContent = "Ảnh tĩnh, tự làm mới mỗi " + refresh + " giây";
     player.appendChild(note);
-  }else{ /* hls hoặc mp4 */
-    const v=document.createElement("video");
-    v.controls=true; v.playsInline=true; v.preload="metadata";
-    v.addEventListener("error",function(){ playerError(player); });
+  } else {
+    const v = document.createElement("video");
+    v.controls = true; v.playsInline = true; v.preload = "metadata";
+    v.addEventListener("error", () => playerError(player));
     player.appendChild(v);
-    if(type==="hls" && !v.canPlayType("application/vnd.apple.mpegurl")){
-      attachHls(v,cam.url);
-    }else{
-      v.src=cam.url;
-    }
+    if (type === "hls" && !v.canPlayType("application/vnd.apple.mpegurl")) attachHls(v, cam.url);
+    else v.src = cam.url;
   }
-
   card.appendChild(player);
-  const meta=document.createElement("div");
-  meta.className="cam-meta";
-  meta.innerHTML="<h3>"+esc(cam.name||"Camera")+"</h3>"+
-    (cam.location?'<span class="loc">'+esc(cam.location)+"</span>":"");
+  const meta = document.createElement("div");
+  meta.className = "cam-meta";
+  meta.innerHTML = "<h3>" + esc(cam.name || "Camera") + "</h3>" +
+    (cam.location ? '<span class="loc">' + esc(cam.location) + "</span>" : "");
   card.appendChild(meta);
   return card;
 }
-function renderCameras(list){
-  const grid=document.getElementById("camGrid");
-  grid.innerHTML="";
-  if(!list||!list.length){
-    grid.innerHTML='<div class="empty">Chưa có camera nào ở đây.<br>Mình đang sưu tầm thêm, bạn quay lại sau nhé.</div>';
+function renderCameras(){
+  const show = DATA.sections.cameras !== false;
+  document.getElementById("camera").style.display = show ? "" : "none";
+  document.querySelector('nav a[data-sec="cameras"]').style.display = show ? "" : "none";
+  if (!show) return;
+  const grid = document.getElementById("camGrid");
+  grid.className = "cam-grid cols-" + (DATA.layout.camColumns || 3);
+  grid.innerHTML = "";
+  const list = DATA.cameras || [];
+  if (!list.length){
+    grid.innerHTML = '<div class="empty">Chưa có camera nào ở đây.<br>Mình đang sưu tầm thêm, bạn quay lại sau nhé.</div>';
     return;
   }
-  list.forEach(function(cam){ grid.appendChild(buildCamera(cam)); });
+  list.forEach(cam => grid.appendChild(buildCamera(cam)));
 }
-/* ---------- Radio ---------- */
-const audio=new Audio();
-audio.preload="none";
-let currentStationId=null;
 
+/* ================= Radio ================= */
+const audio = new Audio();
+audio.preload = "none"; audio.volume = .8;
+let currentStationId = null;
 async function resolveAudioUrl(raw){
-  const u=String(raw||"").trim();
-  if(/\.m3u8(\?|#|$)/i.test(u)) return {url:u,hls:true};
-  if(/\.(m3u|pls)(\?|#|$)/i.test(u)){
+  const u = String(raw || "").trim();
+  if (/\.m3u8(\?|#|$)/i.test(u)) return { url: u, hls: true };
+  if (/\.(m3u|pls)(\?|#|$)/i.test(u)){
     try{
-      const r=await fetch(u);
-      if(!r.ok) throw new Error("fetch failed");
-      const txt=await r.text();
-      const line=txt.split(/\r?\n/).map(function(s){return s.trim();})
-        .find(function(s){return s && s.charAt(0)!=="#";});
-      if(line){
-        const abs=new URL(line,u).href;
-        return {url:abs,hls:/\.m3u8(\?|#|$)/i.test(abs)};
+      const r = await fetch(u);
+      if (!r.ok) throw 0;
+      const txt = await r.text();
+      const line = txt.split(/\r?\n/).map(s => s.trim()).find(s => s && s[0] !== "#");
+      if (line){
+        const abs = new URL(line, u).href;
+        return { url: abs, hls: /\.m3u8(\?|#|$)/i.test(abs) };
       }
-    }catch(e){/* trình duyệt chặn đọc file m3u, thử phát trực tiếp */}
+    }catch(e){}
   }
-  return {url:u,hls:false};
+  return { url: u, hls: false };
 }
-function setPbStatus(t){document.getElementById("pbStatus").textContent=t;}
-async function playStation(st,btn){
-  document.querySelectorAll(".station").forEach(function(b){b.classList.remove("playing");});
-  if(btn) btn.classList.add("playing");
-  currentStationId=st.id;
-  const bar=document.getElementById("playerbar");
+async function playStation(st, btn){
+  document.querySelectorAll(".station").forEach(b => b.classList.remove("playing"));
+  if (btn) btn.classList.add("playing");
+  currentStationId = st.id;
+  const bar = document.getElementById("playerbar");
   bar.classList.add("show");
   document.body.classList.add("has-player");
-  document.getElementById("pbName").textContent=st.name;
-  setPbStatus("Đang tải...");
-  document.getElementById("pbToggle").textContent="❚❚";
+  document.getElementById("pbName").textContent = st.name;
+  document.getElementById("pbStatus").textContent = "Đang tải...";
+  document.getElementById("pbToggle").textContent = "❚❚";
   try{ audio.pause(); }catch(e){}
   try{
-    const r=await resolveAudioUrl(st.url);
-    if(currentStationId!==st.id) return; /* người dùng đã bấm kênh khác */
-    if(r.hls){
-      if(audio.canPlayType("application/vnd.apple.mpegurl")){
-        audio.src=r.url;
-      }else{
-        const ok=await attachHls(audio,r.url);
-        if(!ok) throw new Error("hls");
-      }
-    }else{
-      audio.src=r.url;
-    }
+    const r = await resolveAudioUrl(st.url);
+    if (currentStationId !== st.id) return;
+    if (r.hls && !audio.canPlayType("application/vnd.apple.mpegurl")){
+      const ok = await attachHls(audio, r.url);
+      if (!ok) throw 0;
+    } else audio.src = r.url;
     await audio.play();
-    setPbStatus("Đang phát");
+    document.getElementById("pbStatus").textContent = "Đang phát";
   }catch(e){
-    setPbStatus("Không phát được. Có thể link đã hỏng.");
+    document.getElementById("pbStatus").textContent = "Không phát được. Có thể link đã hỏng.";
   }
 }
-function renderRadios(list){
-  const box=document.getElementById("stationList");
-  box.innerHTML="";
-  if(!list||!list.length){
-    box.innerHTML='<div class="empty" style="width:100%">Chưa có kênh radio nào.<br>Mình đang sưu tầm thêm, bạn quay lại sau nhé.</div>';
+function renderRadios(){
+  const show = DATA.sections.radios !== false;
+  document.getElementById("radio").style.display = show ? "" : "none";
+  document.querySelector('nav a[data-sec="radios"]').style.display = show ? "" : "none";
+  if (!show) return;
+  const box = document.getElementById("stationList");
+  box.innerHTML = "";
+  const list = DATA.radios || [];
+  if (!list.length){
+    box.innerHTML = '<div class="empty" style="width:100%">Chưa có kênh radio nào.<br>Mình đang sưu tầm thêm, bạn quay lại sau nhé.</div>';
     return;
   }
-  list.forEach(function(st){
-    const b=document.createElement("button");
-    b.className="station";
-    b.innerHTML='<span class="dot"></span><span>'+esc(st.name||"Kênh radio")+"</span>";
-    b.title=st.note||st.name||"";
-    b.addEventListener("click",function(){ playStation(st,b); });
+  list.forEach(st => {
+    const b = document.createElement("button");
+    b.className = "station";
+    b.innerHTML = '<span class="dot"></span><span>' + esc(st.name || "Kênh radio") + "</span>";
+    b.title = st.note || st.name || "";
+    b.addEventListener("click", () => playStation(st, b));
     box.appendChild(b);
   });
 }
-document.getElementById("pbToggle").addEventListener("click",function(){
-  if(audio.paused){ audio.play().catch(function(){}); this.textContent="❚❚"; setPbStatus("Đang phát"); }
-  else{ audio.pause(); this.textContent="▶"; setPbStatus("Tạm dừng"); }
+document.getElementById("pbToggle").addEventListener("click", function(){
+  if (audio.paused){ audio.play().catch(()=>{}); this.textContent = "❚❚"; document.getElementById("pbStatus").textContent = "Đang phát"; }
+  else { audio.pause(); this.textContent = "▶"; document.getElementById("pbStatus").textContent = "Tạm dừng"; }
 });
-document.getElementById("pbVol").addEventListener("input",function(){ audio.volume=this.value/100; });
-audio.volume=0.8;
-document.getElementById("pbClose").addEventListener("click",function(){
+document.getElementById("pbVol").addEventListener("input", function(){ audio.volume = this.value / 100; });
+document.getElementById("pbClose").addEventListener("click", () => {
   try{ audio.pause(); }catch(e){}
-  currentStationId=null;
+  currentStationId = null;
   document.getElementById("playerbar").classList.remove("show");
   document.body.classList.remove("has-player");
-  document.querySelectorAll(".station").forEach(function(b){b.classList.remove("playing");});
+  document.querySelectorAll(".station").forEach(b => b.classList.remove("playing"));
 });
-
-/* ---------- Âm thanh thư giãn (tổng hợp bằng Web Audio) ---------- */
-const Ambient=(function(){
-  let ctx=null,master=null,whiteBuf=null,brownBuf=null;
-  const active={};
-  const volumes={rain:.5,waves:.55,wind:.4,brown:.5};
+/* ================= Âm thanh thư giãn (Web Audio) ================= */
+const Ambient = (() => {
+  let ctx = null, master = null, whiteBuf = null, brownBuf = null;
+  const active = {};
+  const volumes = { rain: .5, waves: .55, wind: .4, brown: .5 };
   function ensure(){
-    if(ctx) return;
-    const AC=window.AudioContext||window.webkitAudioContext;
-    ctx=new AC();
-    master=ctx.createGain(); master.gain.value=.9; master.connect(ctx.destination);
+    if (ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value = .9; master.connect(ctx.destination);
   }
   function noiseBuf(){
-    const len=ctx.sampleRate*2,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
-    for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+    const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     return buf;
   }
   function brownNoiseBuf(){
-    const len=ctx.sampleRate*2,buf=ctx.createBuffer(1,len,ctx.sampleRate),d=buf.getChannelData(0);
-    let last=0;
-    for(let i=0;i<len;i++){const w=Math.random()*2-1;d[i]=(last+.02*w)/1.02;last=d[i];d[i]*=3.5;}
+    const len = ctx.sampleRate * 2, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < len; i++){ const w = Math.random()*2-1; d[i] = (last + .02*w)/1.02; last = d[i]; d[i] *= 3.5; }
     return buf;
   }
-  function src(buf){const s=ctx.createBufferSource();s.buffer=buf;s.loop=true;return s;}
-  function lfo(freq,depth){
-    const o=ctx.createOscillator();o.frequency.value=freq;
-    const g=ctx.createGain();g.gain.value=depth;
-    o.connect(g);o.start();return {out:g,nodes:[o]};
-  }
-  const defs={
-    rain:function(){
-      whiteBuf=whiteBuf||noiseBuf();
-      const s=src(whiteBuf),lp=ctx.createBiquadFilter(),hp=ctx.createBiquadFilter(),g=ctx.createGain();
-      lp.type="lowpass";lp.frequency.value=1700;hp.type="highpass";hp.frequency.value=350;
-      g.gain.value=0;
-      const w=lfo(.13,.07);w.out.connect(g.gain);
-      s.connect(lp);lp.connect(hp);hp.connect(g);s.start();
-      return {nodes:[s].concat(w.nodes),out:g};
+  const src = buf => { const s = ctx.createBufferSource(); s.buffer = buf; s.loop = true; return s; };
+  const lfo = (freq, depth) => {
+    const o = ctx.createOscillator(); o.frequency.value = freq;
+    const g = ctx.createGain(); g.gain.value = depth;
+    o.connect(g); o.start(); return { out: g, nodes: [o] };
+  };
+  const defs = {
+    rain(){
+      whiteBuf = whiteBuf || noiseBuf();
+      const s = src(whiteBuf), lp = ctx.createBiquadFilter(), hp = ctx.createBiquadFilter(), g = ctx.createGain();
+      lp.type = "lowpass"; lp.frequency.value = 1700; hp.type = "highpass"; hp.frequency.value = 350;
+      g.gain.value = 0;
+      const w = lfo(.13, .07); w.out.connect(g.gain);
+      s.connect(lp); lp.connect(hp); hp.connect(g); s.start();
+      return { nodes: [s].concat(w.nodes), out: g };
     },
-    waves:function(){
-      whiteBuf=whiteBuf||noiseBuf();
-      const s=src(whiteBuf),lp=ctx.createBiquadFilter(),g=ctx.createGain();
-      lp.type="lowpass";lp.frequency.value=520;g.gain.value=0;
-      const w=lfo(.08,.22);w.out.connect(g.gain);
-      s.connect(lp);lp.connect(g);s.start();
-      return {nodes:[s].concat(w.nodes),out:g};
+    waves(){
+      whiteBuf = whiteBuf || noiseBuf();
+      const s = src(whiteBuf), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+      lp.type = "lowpass"; lp.frequency.value = 520; g.gain.value = 0;
+      const w = lfo(.08, .22); w.out.connect(g.gain);
+      s.connect(lp); lp.connect(g); s.start();
+      return { nodes: [s].concat(w.nodes), out: g };
     },
-    wind:function(){
-      whiteBuf=whiteBuf||noiseBuf();
-      const s=src(whiteBuf),bp=ctx.createBiquadFilter(),g=ctx.createGain();
-      bp.type="bandpass";bp.frequency.value=480;bp.Q.value=.6;g.gain.value=0;
-      const w1=lfo(.05,.1),w2=lfo(.11,.06);
-      w1.out.connect(g.gain);w2.out.connect(g.gain);
-      s.connect(bp);bp.connect(g);s.start();
-      return {nodes:[s].concat(w1.nodes,w2.nodes),out:g};
+    wind(){
+      whiteBuf = whiteBuf || noiseBuf();
+      const s = src(whiteBuf), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+      bp.type = "bandpass"; bp.frequency.value = 480; bp.Q.value = .6; g.gain.value = 0;
+      const w1 = lfo(.05, .1), w2 = lfo(.11, .06);
+      w1.out.connect(g.gain); w2.out.connect(g.gain);
+      s.connect(bp); bp.connect(g); s.start();
+      return { nodes: [s].concat(w1.nodes, w2.nodes), out: g };
     },
-    brown:function(){
-      brownBuf=brownBuf||brownNoiseBuf();
-      const s=src(brownBuf),g=ctx.createGain();g.gain.value=0;
-      s.connect(g);s.start();
-      return {nodes:[s],out:g};
+    brown(){
+      brownBuf = brownBuf || brownNoiseBuf();
+      const s = src(brownBuf), g = ctx.createGain(); g.gain.value = 0;
+      s.connect(g); s.start();
+      return { nodes: [s], out: g };
     }
   };
   return {
-    isOn:function(n){return !!active[n];},
-    toggle:function(n){
+    toggle(n){
       ensure();
-      if(ctx.state==="suspended") ctx.resume();
-      if(active[n]){
-        const a=active[n];delete active[n];
-        a.out.gain.setTargetAtTime(0,ctx.currentTime,.35);
-        setTimeout(function(){a.nodes.forEach(function(x){try{x.stop();}catch(e){} try{x.disconnect();}catch(e2){}});},700);
+      if (ctx.state === "suspended") ctx.resume();
+      if (active[n]){
+        const a = active[n]; delete active[n];
+        a.out.gain.setTargetAtTime(0, ctx.currentTime, .35);
+        setTimeout(() => a.nodes.forEach(x => { try{x.stop();}catch(e){} try{x.disconnect();}catch(e2){} }), 700);
         return false;
       }
-      const b=defs[n]();
+      const b = defs[n]();
       b.out.connect(master);
-      active[n]=b;
-      b.out.gain.setTargetAtTime(volumes[n]||.5,ctx.currentTime,.9);
+      active[n] = b;
+      b.out.gain.setTargetAtTime(volumes[n] || .5, ctx.currentTime, .9);
       return true;
     },
-    setVolume:function(n,v){
-      volumes[n]=v;
-      if(active[n]) active[n].out.gain.setTargetAtTime(v,ctx.currentTime,.15);
+    setVolume(n, v){
+      volumes[n] = v;
+      if (active[n]) active[n].out.gain.setTargetAtTime(v, ctx.currentTime, .15);
     }
   };
 })();
-const AMBIENT_SOUNDS=[
-  {id:"rain", name:"Tiếng mưa", desc:"Mưa rơi đều, dễ ngủ"},
-  {id:"waves",name:"Sóng biển",desc:"Sóng vỗ nhịp nhàng"},
-  {id:"wind", name:"Tiếng gió", desc:"Gió thổi nhẹ qua kẽ lá"},
-  {id:"brown",name:"Ồn nâu",   desc:"Tiếng ù trầm giúp tập trung"}
+const AMBIENT_SOUNDS = [
+  { id: "rain",  name: "Tiếng mưa",  desc: "Mưa rơi đều, dễ ngủ" },
+  { id: "waves", name: "Sóng biển",  desc: "Sóng vỗ nhịp nhàng" },
+  { id: "wind",  name: "Tiếng gió",   desc: "Gió thổi nhẹ qua kẽ lá" },
+  { id: "brown", name: "Ồn nâu",     desc: "Tiếng ù trầm giúp tập trung" }
 ];
 function renderAmbient(){
-  const grid=document.getElementById("ambGrid");
-  AMBIENT_SOUNDS.forEach(function(s){
-    const card=document.createElement("div");
-    card.className="amb-card";
-    card.innerHTML="<h3>"+esc(s.name)+"</h3><p>"+esc(s.desc)+"</p>"+
-      '<div class="amb-row"><button class="toggle">Bật</button>'+
+  const show = DATA.sections.ambient !== false;
+  document.getElementById("ambient").style.display = show ? "" : "none";
+  document.querySelector('nav a[data-sec="ambient"]').style.display = show ? "" : "none";
+  if (!show) return;
+  const grid = document.getElementById("ambGrid");
+  if (grid.children.length) return;
+  AMBIENT_SOUNDS.forEach(s => {
+    const card = document.createElement("div");
+    card.className = "amb-card";
+    card.innerHTML = "<h3>" + esc(s.name) + "</h3><p>" + esc(s.desc) + "</p>" +
+      '<div class="amb-row"><button class="toggle">Bật</button>' +
       '<input type="range" min="0" max="100" value="50" aria-label="Âm lượng"></div>';
-    const btn=card.querySelector(".toggle"),rg=card.querySelector("input");
-    btn.addEventListener("click",function(){
-      const on=Ambient.toggle(s.id);
-      btn.textContent=on?"Tắt":"Bật";
-      btn.classList.toggle("on",on);
+    const btn = card.querySelector(".toggle"), rg = card.querySelector("input");
+    btn.addEventListener("click", () => {
+      const on = Ambient.toggle(s.id);
+      btn.textContent = on ? "Tắt" : "Bật";
+      btn.classList.toggle("on", on);
     });
-    rg.addEventListener("input",function(){ Ambient.setVolume(s.id,this.value/100); });
+    rg.addEventListener("input", function(){ Ambient.setVolume(s.id, this.value / 100); });
     grid.appendChild(card);
   });
 }
 
-/* ---------- Ủng hộ ---------- */
-function renderDonate(d){
-  d=d||{};
-  document.getElementById("donateQr").src=d.qrImage||"assets/donate-qr.svg";
-  const info=document.getElementById("donateInfo");
-  let html="";
-  if(d.bankName) html+='<div class="kv"><span>Ngân hàng</span><b>'+esc(d.bankName)+"</b></div>";
-  if(d.accountName) html+='<div class="kv"><span>Chủ tài khoản</span><b>'+esc(d.accountName)+"</b></div>";
-  if(d.accountNumber) html+='<div class="kv"><span>Số tài khoản</span><b>'+esc(d.accountNumber)+"</b></div>";
-  info.innerHTML=html;
-  document.getElementById("donateNote").textContent=d.note||"";
-  const cp=document.getElementById("copyAcc");
-  if(d.accountNumber){
-    cp.style.display="";
-    cp.addEventListener("click",function(){
-      const done=function(){cp.textContent="Đã sao chép";setTimeout(function(){cp.textContent="Sao chép số tài khoản";},2000);};
-      if(navigator.clipboard&&navigator.clipboard.writeText){
-        navigator.clipboard.writeText(d.accountNumber).then(done).catch(function(){fallbackCopy(d.accountNumber);done();});
-      }else{fallbackCopy(d.accountNumber);done();}
-    });
-  }
-}
+/* ================= Ủng hộ ================= */
 function fallbackCopy(t){
-  const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);
-  ta.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(ta);
+  const ta = document.createElement("textarea");
+  ta.value = t; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); }catch(e){}
+  document.body.removeChild(ta);
+}
+function renderDonate(){
+  const show = DATA.sections.donate !== false;
+  document.getElementById("donate").style.display = show ? "" : "none";
+  document.querySelector('nav a[data-sec="donate"]').style.display = show ? "" : "none";
+  if (!show) return;
+  const d = DATA.donate || {};
+  const qr = document.getElementById("donateQr");
+  if (d.qrImage){ qr.src = d.qrImage; qr.style.display = ""; }
+  else qr.style.display = "none";
+  let html = "";
+  if (d.bankName) html += '<div class="kv"><span>Ngân hàng / Ví</span><b>' + esc(d.bankName) + "</b></div>";
+  if (d.accountName) html += '<div class="kv"><span>Chủ tài khoản</span><b>' + esc(d.accountName) + "</b></div>";
+  if (d.accountNumber) html += '<div class="kv"><span>Số tài khoản</span><b>' + esc(d.accountNumber) + "</b></div>";
+  document.getElementById("donateInfo").innerHTML = html;
+  document.getElementById("donateNote").textContent = d.note || "";
+  const cp = document.getElementById("copyAcc");
+  cp.style.display = d.accountNumber ? "" : "none";
+  cp.onclick = () => {
+    const done = () => { cp.textContent = "Đã sao chép"; setTimeout(() => cp.textContent = "Sao chép số tài khoản", 2000); };
+    if (navigator.clipboard && navigator.clipboard.writeText)
+      navigator.clipboard.writeText(d.accountNumber).then(done).catch(() => { fallbackCopy(d.accountNumber); done(); });
+    else { fallbackCopy(d.accountNumber); done(); }
+  };
 }
 
-/* ---------- Khởi động ---------- */
-(function init(){
+/* ================= Render tổng ================= */
+function renderSite(){
+  const s = DATA.site || {};
+  document.title = s.title || "VN Chill Cam";
+  const bt = document.getElementById("brandLink");
+  bt.innerHTML = esc(s.title || "VN Chill Cam").replace("Chill", "<span>Chill</span>");
+  const ht = document.getElementById("heroTitle");
+  ht.innerHTML = esc(s.title || "VN Chill Cam").replace("Chill", "<span>Chill</span>");
+  document.getElementById("tagline").textContent = s.tagline || "";
+  const ann = s.announcement;
+  const a = document.getElementById("announce");
+  if (ann){ a.textContent = ann; a.style.display = ""; }
+  else a.style.display = "none";
+}
+function renderAll(){
+  renderSite();
+  applyTheme();
+  renderCameras();
+  renderRadios();
   renderAmbient();
-  loadData().then(function(data){
-    document.title=(data.site&&data.site.title)||"VN Chill Cam";
-    document.getElementById("tagline").textContent=(data.site&&data.site.tagline)||"";
-    const ann=data.site&&data.site.announcement;
-    if(ann){const a=document.getElementById("announce");a.textContent=ann;a.style.display="";}
-    renderCameras(data.cameras);
-    renderRadios(data.radios);
-    renderDonate(data.donate);
-  }).catch(function(){
-    document.getElementById("tagline").textContent="Không tải được dữ liệu. Bạn thử tải lại trang nhé.";
-  });
+  renderDonate();
+}
+
+/* ================= Khởi động ================= */
+(function init(){
+  renderSwatches();
+  renderAmbient();
+  if (!sb){
+    document.getElementById("connErr").style.display = "";
+    document.getElementById("connErr").textContent = "Không tải được thư viện kết nối. Bạn kiểm tra lại mạng rồi tải lại trang nhé.";
+    renderAll();
+    return;
+  }
+  reload().then(() => watchLive());
 })();
 </script>
 </body>
